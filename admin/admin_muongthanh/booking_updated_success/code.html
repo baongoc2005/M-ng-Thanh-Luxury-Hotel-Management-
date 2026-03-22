@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edit Booking #MT-88291 | Muong Thanh Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary": "#5d5e60",
+                        "on-tertiary-container": "#3d3f41",
+                        "surface": "#f8f9fa",
+                        "inverse-primary": "#ffb77d",
+                        "tertiary-container": "#a9aaac",
+                        "on-surface-variant": "#564334",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#1a1c1d",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#454749",
+                        "on-primary-fixed-variant": "#6e3900",
+                        "surface-container-highest": "#e1e3e4",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#c6c6c8",
+                        "surface-container-high": "#e7e8e9",
+                        "surface-container": "#edeeef",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#00174a",
+                        "surface-tint": "#904d00",
+                        "outline-variant": "#ddc1ae",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#2a4486",
+                        "inverse-surface": "#2e3132",
+                        "secondary-container": "#9cb4fe",
+                        "surface-container-low": "#f3f4f5",
+                        "surface-bright": "#f8f9fa",
+                        "primary-fixed-dim": "#ffb77d",
+                        "surface-variant": "#e1e3e4",
+                        "on-primary": "#ffffff",
+                        "secondary": "#435b9f",
+                        "primary-fixed": "#ffdcc3",
+                        "on-surface": "#191c1d",
+                        "surface-dim": "#d9dadb",
+                        "on-background": "#191c1d",
+                        "outline": "#897362",
+                        "on-primary-fixed": "#2f1500",
+                        "on-primary-container": "#623200",
+                        "inverse-on-surface": "#f0f1f2",
+                        "background": "#f8f9fa",
+                        "primary-container": "#ff8c00",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#b3c5ff",
+                        "secondary-fixed": "#dbe1ff",
+                        "tertiary-fixed": "#e2e2e4",
+                        "primary": "#904d00",
+                        "on-secondary-fixed-variant": "#2a4386"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        h1, h2, h3, .font-headline {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface"><div class="fixed top-6 right-6 z-[100] animate-bounce-in">
+<div class="bg-white border-l-4 border-green-500 shadow-2xl rounded-xl p-4 flex items-start gap-4 max-w-sm">
+<div class="bg-green-100 p-2 rounded-full">
+<span class="material-symbols-outlined text-green-600">check_circle</span>
+</div>
+<div class="flex-1">
+<h4 class="text-sm font-bold text-slate-900">Reservation Updated</h4>
+<p class="text-xs text-slate-500 mt-1">Booking #MT-88291 has been successfully updated.</p>
+</div>
+<button class="text-slate-400 hover:text-slate-600">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+</div>
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-72 fixed left-0 top-0 flex flex-col bg-slate-50 dark:bg-slate-950 font-manrope font-medium text-sm z-40">
+<div class="px-8 mb-10">
+<h1 class="text-lg font-black text-slate-900 uppercase tracking-tighter">Muong Thanh</h1>
+<p class="text-[10px] font-manrope uppercase tracking-widest text-orange-600 font-bold">Luxury Atelier</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center text-slate-500 hover:text-slate-900 px-8 py-3 font-manrope text-sm uppercase tracking-wider transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">dashboard</span> Dashboard
+            </a>
+<a class="flex items-center text-orange-600 font-semibold bg-white rounded-l-full ml-4 pl-4 py-3 font-manrope text-sm uppercase tracking-wider transition-transform" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">calendar_month</span> Bookings
+            </a>
+<a class="flex items-center text-slate-500 hover:text-slate-900 px-8 py-3 font-manrope text-sm uppercase tracking-wider transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">bed</span> Rooms
+            </a>
+<a class="flex items-center text-slate-500 hover:text-slate-900 px-8 py-3 font-manrope text-sm uppercase tracking-wider transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">groups</span> Staff
+            </a>
+<a class="flex items-center text-slate-500 hover:text-slate-900 px-8 py-3 font-manrope text-sm uppercase tracking-wider transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">monitoring</span> Analytics
+            </a>
+<a class="flex items-center text-slate-500 hover:text-slate-900 px-8 py-3 font-manrope text-sm uppercase tracking-wider transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">inventory</span> Inventory
+            </a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full bg-gradient-to-r from-primary to-primary-container text-white py-3 px-4 rounded-full font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg">add</span> New Reservation
+            </button>
+</div>
+<div class="mt-6 border-t border-slate-200 pt-4">
+<a class="flex items-center text-slate-500 hover:text-slate-900 px-8 py-3 font-manrope text-sm uppercase tracking-wider transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">contact_support</span> Support
+            </a>
+<a class="flex items-center text-slate-500 hover:text-slate-900 px-8 py-3 font-manrope text-sm uppercase tracking-wider transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined mr-3 text-xl">logout</span> Logout
+            </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-72 min-h-screen"><!-- TopAppBar Component -->
+<header class="fixed top-0 right-0 left-72 z-30 bg-white/80 backdrop-blur-md shadow-sm font-manrope antialiased tracking-tight">
+<div class="flex items-center justify-between px-8 py-4 w-full max-w-[1920px] mx-auto">
+<div class="flex items-center gap-8">
+<h1 class="text-xl font-bold tracking-tighter text-slate-900">Muong Thanh Luxury</h1>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-500 hover:text-slate-900 transition-colors" href="#">Dashboard</a>
+<a class="text-orange-600 font-semibold border-b-2 border-orange-600 pb-1" href="#">Bookings</a>
+<a class="text-slate-500 hover:text-slate-900 transition-colors" href="#">Invitations</a>
+<a class="text-slate-500 hover:text-slate-900 transition-colors" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-lg transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-lg transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-px bg-slate-100 mx-2"></div>
+<div class="flex items-center gap-3 pl-2">
+<span class="text-sm font-semibold text-slate-700">Admin</span>
+<img class="w-10 h-10 rounded-full object-cover border-2 border-primary-fixed" data-alt="Admin profile avatar professional portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByZSd-gXP4Zhg3EFzRpjw4iVChWdjETaWtxgEc6NgKZ0YmHakhFJfbyD9F2dAYur_TsS331RDzbuCH2g-4RHg2YnK5iK-F50cS4YO7LhXuyOZg8gNDTjIgois9sIrhHA5OI3m0bJawkQ2279iLYeY-hbe94VutITjK1uwDP9p9FpCPwKnLuP8G5Ztn9ZAc1abkJNZ9NkoHgkObrsgUwlG3xDis3pGins9-hV2Ic2qj2hLO2J0PCRS-pE5TlToeuicwnf7Fsogh5DS4"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="pt-24 px-10 pb-12">
+<!-- Header Section with Stats & Search -->
+<div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<span class="text-orange-600 font-bold tracking-widest uppercase text-xs">Reservations</span>
+<h2 class="text-4xl font-extrabold text-on-surface tracking-tighter mt-1">Bookings Archive</h2>
+<p class="text-on-tertiary-container mt-2 max-w-md">Manage and review all historical and upcoming guest reservations across all luxury branches.</p>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 group-focus-within:text-primary transition-colors" data-icon="search">search</span>
+<input class="pl-11 pr-6 py-3 bg-surface-container-highest border-none rounded-xl w-72 focus:ring-2 focus:ring-primary-fixed transition-all text-sm font-medium" placeholder="Search Booking ID, Customer..." type="text"/>
+</div>
+<button class="flex items-center gap-2 px-6 py-3 bg-white border border-outline-variant/20 rounded-xl shadow-sm hover:shadow-md transition-all font-medium text-sm text-on-surface">
+<span class="material-symbols-outlined text-lg" data-icon="filter_list">filter_list</span>
+                        Status
+                    </button>
+<button class="flex items-center gap-2 px-6 py-3 bg-white border border-outline-variant/20 rounded-xl shadow-sm hover:shadow-md transition-all font-medium text-sm text-on-surface">
+<span class="material-symbols-outlined text-lg" data-icon="calendar_today">calendar_today</span>
+                        Date Range
+                    </button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="bg-surface-container-low p-1 rounded-3xl">
+<div class="bg-surface-container-lowest rounded-[1.25rem] overflow-hidden shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/30">
+<th class="px-8 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant/60">Booking ID</th>
+<th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant/60">Customer Name</th>
+<th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant/60">Hotel &amp; Room</th>
+<th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant/60">Dates</th>
+<th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant/60">Status</th>
+<th class="px-6 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant/60 text-right">Total Price</th>
+<th class="px-8 py-5 text-xs font-bold uppercase tracking-widest text-on-surface-variant/60"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Updated Row 1 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-8 py-6 font-mono text-sm font-semibold text-primary">#MT-88291</td>
+<td class="px-6 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed text-xs font-bold">AR</div>
+<span class="font-medium text-on-surface">Alexander Richardson</span>
+</div>
+</td>
+<td class="px-6 py-6">
+<div class="flex flex-col">
+<span class="text-sm font-medium">Muong Thanh Luxury Da Nang</span>
+<span class="text-xs text-on-tertiary-container">Executive Ocean View • 2205</span>
+</div>
+</td>
+<td class="px-6 py-6">
+<div class="flex flex-col">
+<span class="text-sm font-medium text-on-surface">Nov 15 - Nov 20</span>
+<span class="text-xs text-on-tertiary-container">5 Nights</span>
+</div>
+</td>
+<td class="px-6 py-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/10 text-primary font-bold text-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(144,77,0,0.5)]"></span>
+                                        Confirmed
+                                    </span>
+</td>
+<td class="px-6 py-6 text-right font-bold text-on-surface">$1,408.75</td>
+<td class="px-8 py-6 text-right">
+<button class="p-2 opacity-0 group-hover:opacity-100 transition-opacity text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Other rows (placeholders) -->
+</tbody>
+</table>
+</div>
+</div>
+</div></main>
+</body></html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Add New Room | Muong Thanh Luxury</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-primary": "#ffb77d",
+              "on-tertiary": "#ffffff",
+              "on-primary": "#ffffff",
+              "surface-container-high": "#e7e8e9",
+              "on-primary-fixed-variant": "#6e3900",
+              "on-tertiary-fixed": "#1a1c1d",
+              "on-secondary-fixed": "#00174a",
+              "tertiary": "#5d5e60",
+              "on-secondary-container": "#2a4486",
+              "error": "#ba1a1a",
+              "surface-container-low": "#f3f4f5",
+              "surface": "#f8f9fa",
+              "tertiary-container": "#a9aaac",
+              "surface-dim": "#d9dadb",
+              "secondary": "#435b9f",
+              "on-primary-container": "#623200",
+              "inverse-surface": "#2e3132",
+              "surface-tint": "#904d00",
+              "outline-variant": "#ddc1ae",
+              "secondary-fixed": "#dbe1ff",
+              "on-secondary": "#ffffff",
+              "on-tertiary-fixed-variant": "#454749",
+              "surface-variant": "#e1e3e4",
+              "on-tertiary-container": "#3d3f41",
+              "primary-fixed-dim": "#ffb77d",
+              "primary-fixed": "#ffdcc3",
+              "on-error": "#ffffff",
+              "surface-bright": "#f8f9fa",
+              "primary-container": "#ff8c00",
+              "inverse-on-surface": "#f0f1f2",
+              "secondary-fixed-dim": "#b3c5ff",
+              "on-error-container": "#93000a",
+              "on-background": "#191c1d",
+              "secondary-container": "#9cb4fe",
+              "on-secondary-fixed-variant": "#2a4386",
+              "background": "#f8f9fa",
+              "tertiary-fixed": "#e2e2e4",
+              "tertiary-fixed-dim": "#c6c6c8",
+              "on-surface": "#191c1d",
+              "surface-container": "#edeeef",
+              "surface-container-highest": "#e1e3e4",
+              "primary": "#904d00",
+              "on-primary-fixed": "#2f1500",
+              "error-container": "#ffdad6",
+              "surface-container-lowest": "#ffffff",
+              "outline": "#897362",
+              "on-surface-variant": "#564334"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .font-manrope { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="text-on-surface antialiased">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-slate-50 flex flex-col py-6 gap-y-2 z-50">
+<div class="px-6 mb-8">
+<h1 class="text-2xl font-bold tracking-tighter text-slate-900 font-manrope">Muong Thanh</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold mt-1">Luxury Atelier</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center px-4 py-3 mx-2 text-slate-500 hover:bg-slate-200/50 transition-colors font-manrope text-sm font-medium tracking-tight group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-orange-600" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center px-4 py-3 mx-2 text-slate-500 hover:bg-slate-200/50 transition-colors font-manrope text-sm font-medium tracking-tight group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-orange-600" data-icon="hotel">hotel</span>
+                Hotel Management
+            </a>
+<a class="flex items-center px-4 py-3 bg-white text-orange-600 shadow-sm rounded-lg mx-2 font-manrope text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="bed" style="font-variation-settings: 'FILL' 1;">bed</span>
+                Room Management
+            </a>
+<a class="flex items-center px-4 py-3 mx-2 text-slate-500 hover:bg-slate-200/50 transition-colors font-manrope text-sm font-medium tracking-tight group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-orange-600" data-icon="book_online">book_online</span>
+                Booking Management
+            </a>
+<a class="flex items-center px-4 py-3 mx-2 text-slate-500 hover:bg-slate-200/50 transition-colors font-manrope text-sm font-medium tracking-tight group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-orange-600" data-icon="group">group</span>
+                Customer Management
+            </a>
+<a class="flex items-center px-4 py-3 mx-2 text-slate-500 hover:bg-slate-200/50 transition-colors font-manrope text-sm font-medium tracking-tight group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-orange-600" data-icon="sell">sell</span>
+                Promotion Management
+            </a>
+<a class="flex items-center px-4 py-3 mx-2 text-slate-500 hover:bg-slate-200/50 transition-colors font-manrope text-sm font-medium tracking-tight group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-orange-600" data-icon="badge">badge</span>
+                Staff Management
+            </a>
+<a class="flex items-center px-4 py-3 mx-2 text-slate-500 hover:bg-slate-200/50 transition-colors font-manrope text-sm font-medium tracking-tight group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-orange-600" data-icon="analytics">analytics</span>
+                Reports
+            </a>
+</nav>
+<div class="mt-auto border-t border-slate-100 pt-4 space-y-1">
+<a class="flex items-center px-4 py-3 mx-2 text-slate-500 hover:bg-slate-200/50 transition-colors font-manrope text-sm font-medium tracking-tight group" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+                Settings
+            </a>
+<a class="flex items-center px-4 py-3 mx-2 text-slate-400 hover:text-error transition-colors font-manrope text-sm font-medium tracking-tight group" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="logout">logout</span>
+                Logout
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-white/80 backdrop-blur-md flex items-center justify-between px-8 w-full border-b border-slate-100 shadow-sm shadow-slate-200/50">
+<div class="flex items-center gap-x-6 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm" data-icon="search">search</span>
+<input class="w-full bg-slate-100 border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary-fixed" placeholder="Search management console..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-x-6">
+<button class="relative text-slate-500 hover:text-orange-600 transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 h-2 w-2 bg-error rounded-full border-2 border-white"></span>
+</button>
+<div class="flex items-center gap-x-3 pl-6 border-l border-slate-100">
+<div class="text-right">
+<p class="text-sm font-bold font-manrope text-on-surface">Admin User</p>
+<p class="text-[10px] text-on-surface-variant font-medium">Super Administrator</p>
+</div>
+<img alt="Admin Profile" class="h-9 w-9 rounded-full bg-slate-200 object-cover border-2 border-primary-fixed" data-alt="Admin user portrait with professional attire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfIt2_fmC27WDVPeY3IoAmrPPBEjKTwLEQT59K4beGcnsDLdv88b5d2c0HazIzvdbaV5HymGlHk-xqwv5bn08DRx0jnIdyEOnEKUnRoWm8Oxtwg-AvKtHWfTL9YWeaIvcwsYMWauyRFpQ-HbClTEp-MyawC1JpgfbzgA3FBysxU_ZuCUA2vRaQD9pa4t51uJP6BAW9V4iYOaNXL-vrsvF8Nw05URIMfxFT_IdV932sWWoKWcXoVqEgYzOjmHz7dab_9JiU9pCgg7s6"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="pt-24 pb-12 px-12 max-w-6xl mx-auto">
+<!-- Breadcrumb & Title -->
+<div class="mb-10">
+<nav class="flex items-center gap-x-2 text-xs font-medium text-on-surface-variant mb-3 uppercase tracking-widest">
+<span>Room Management</span>
+<span class="material-symbols-outlined text-[10px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary font-bold">Add New Room</span>
+</nav>
+<h2 class="text-4xl font-extrabold font-manrope tracking-tight text-on-surface">Create New Room</h2>
+<p class="text-on-surface-variant mt-2 max-w-2xl">Configure room specifications, pricing tiers, and availability status for the new luxury unit.</p>
+</div>
+<form class="space-y-8">
+<!-- Form Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Primary Details -->
+<div class="lg:col-span-7 space-y-8">
+<!-- Section 1: Basic Details -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-sm ring-1 ring-slate-100">
+<div class="flex items-center gap-x-3 mb-6">
+<div class="h-10 w-10 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined" data-icon="info">info</span>
+</div>
+<h3 class="font-manrope font-bold text-xl text-on-surface">Basic Details</h3>
+</div>
+<div class="space-y-6">
+<div>
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Room Name / Number</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl p-4 text-on-surface focus:ring-2 focus:ring-primary-fixed transition-all placeholder:text-slate-400" placeholder="e.g. Suite 501" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Room Type</label>
+<select class="w-full bg-surface-container-highest border-none rounded-xl p-4 text-on-surface focus:ring-2 focus:ring-primary-fixed transition-all">
+<option>Standard</option>
+<option>Deluxe</option>
+<option>Executive Suite</option>
+<option>Presidential Suite</option>
+</select>
+</div>
+<div>
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Hotel Branch</label>
+<select class="w-full bg-surface-container-highest border-none rounded-xl p-4 text-on-surface focus:ring-2 focus:ring-primary-fixed transition-all">
+<option>Muong Thanh Da Nang</option>
+<option>Muong Thanh Nha Trang</option>
+<option>Muong Thanh Ha Noi</option>
+<option>Muong Thanh Phu Quoc</option>
+</select>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Capacity & Pricing -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-sm ring-1 ring-slate-100">
+<div class="flex items-center gap-x-3 mb-6">
+<div class="h-10 w-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+</div>
+<h3 class="font-manrope font-bold text-xl text-on-surface">Capacity &amp; Pricing</h3>
+</div>
+<div class="grid grid-cols-3 gap-6">
+<div>
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Capacity</label>
+<div class="relative">
+<input class="w-full bg-surface-container-highest border-none rounded-xl p-4 pr-12 text-on-surface focus:ring-2 focus:ring-primary-fixed transition-all" type="number" value="2"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined text-sm" data-icon="group">group</span>
+</div>
+</div>
+<div>
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Price / Night</label>
+<div class="relative">
+<input class="w-full bg-surface-container-highest border-none rounded-xl p-4 pl-8 text-on-surface focus:ring-2 focus:ring-primary-fixed transition-all" placeholder="250" type="text"/>
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+</div>
+</div>
+<div>
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Size (sqm)</label>
+<div class="relative">
+<input class="w-full bg-surface-container-highest border-none rounded-xl p-4 text-on-surface focus:ring-2 focus:ring-primary-fixed transition-all" placeholder="45" type="number"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] font-bold">M²</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Status & Features -->
+<div class="lg:col-span-5 space-y-8">
+<!-- Section 3: Status -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-sm ring-1 ring-slate-100">
+<div class="flex items-center gap-x-3 mb-6">
+<div class="h-10 w-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
+<span class="material-symbols-outlined" data-icon="room_preferences">room_preferences</span>
+</div>
+<h3 class="font-manrope font-bold text-xl text-on-surface">Room Status</h3>
+</div>
+<div>
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-2">Initial Status</label>
+<select class="w-full bg-surface-container-highest border-none rounded-xl p-4 text-on-surface focus:ring-2 focus:ring-primary-fixed transition-all">
+<option>Available</option>
+<option>Maintenance</option>
+<option>Occupied</option>
+</select>
+<p class="text-[11px] text-on-surface-variant mt-3 italic">Newly created rooms default to 'Maintenance' for initial inspection.</p>
+</div>
+</section>
+<!-- Section 4: Amenities -->
+<section class="bg-surface-container-lowest p-8 rounded-xl shadow-sm ring-1 ring-slate-100">
+<div class="flex items-center gap-x-3 mb-6">
+<div class="h-10 w-10 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600">
+<span class="material-symbols-outlined" data-icon="star">star</span>
+</div>
+<h3 class="font-manrope font-bold text-xl text-on-surface">Amenities</h3>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<label class="flex items-center p-4 rounded-xl border border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer group">
+<input checked="" class="h-5 w-5 rounded border-slate-300 text-primary focus:ring-primary-fixed" type="checkbox"/>
+<span class="ml-4 font-medium text-sm text-on-surface group-hover:text-primary transition-colors">Free WiFi</span>
+<span class="material-symbols-outlined ml-auto text-slate-300 text-sm" data-icon="wifi">wifi</span>
+</label>
+<label class="flex items-center p-4 rounded-xl border border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer group">
+<input checked="" class="h-5 w-5 rounded border-slate-300 text-primary focus:ring-primary-fixed" type="checkbox"/>
+<span class="ml-4 font-medium text-sm text-on-surface group-hover:text-primary transition-colors">Air Conditioning</span>
+<span class="material-symbols-outlined ml-auto text-slate-300 text-sm" data-icon="ac_unit">ac_unit</span>
+</label>
+<label class="flex items-center p-4 rounded-xl border border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer group">
+<input class="h-5 w-5 rounded border-slate-300 text-primary focus:ring-primary-fixed" type="checkbox"/>
+<span class="ml-4 font-medium text-sm text-on-surface group-hover:text-primary transition-colors">Smart TV</span>
+<span class="material-symbols-outlined ml-auto text-slate-300 text-sm" data-icon="tv">tv</span>
+</label>
+<label class="flex items-center p-4 rounded-xl border border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer group">
+<input class="h-5 w-5 rounded border-slate-300 text-primary focus:ring-primary-fixed" type="checkbox"/>
+<span class="ml-4 font-medium text-sm text-on-surface group-hover:text-primary transition-colors">Breakfast Included</span>
+<span class="material-symbols-outlined ml-auto text-slate-300 text-sm" data-icon="restaurant">restaurant</span>
+</label>
+</div>
+</section>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="flex items-center justify-end gap-x-4 pt-10 border-t border-slate-200">
+<button class="px-8 py-3.5 rounded-full border border-slate-300 text-slate-600 font-bold font-manrope text-sm hover:bg-slate-100 transition-all uppercase tracking-widest" type="button">
+                        Cancel
+                    </button>
+<button class="px-10 py-3.5 rounded-full bg-gradient-to-br from-primary to-primary-container text-white font-bold font-manrope text-sm shadow-lg shadow-orange-200 hover:scale-105 active:scale-95 transition-all uppercase tracking-widest" type="submit">
+                        Save &amp; Create Room
+                    </button>
+</div>
+</form>
+</div>
+</main>
+<!-- Decorative Element -->
+<div class="fixed bottom-0 right-0 p-12 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[200px]" data-icon="apartment">apartment</span>
+</div>
+</body></html>

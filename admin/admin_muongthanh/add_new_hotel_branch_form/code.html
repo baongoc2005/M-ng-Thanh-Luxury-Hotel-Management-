@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Add New Hotel Branch | Muong Thanh Luxury</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed": "#00174a",
+                        "primary-fixed-dim": "#ffb77d",
+                        "secondary-container": "#9cb4fe",
+                        "on-tertiary-fixed": "#1a1c1d",
+                        "tertiary-container": "#a9aaac",
+                        "inverse-primary": "#ffb77d",
+                        "surface-container": "#edeeef",
+                        "surface": "#f8f9fa",
+                        "on-surface": "#191c1d",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#5d5e60",
+                        "surface-container-high": "#e7e8e9",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-variant": "#e1e3e4",
+                        "surface-bright": "#f8f9fa",
+                        "background": "#f8f9fa",
+                        "on-tertiary-container": "#3d3f41",
+                        "on-secondary-fixed-variant": "#2a4386",
+                        "inverse-surface": "#2e3132",
+                        "on-background": "#191c1d",
+                        "on-surface-variant": "#564334",
+                        "on-primary-container": "#623200",
+                        "surface-tint": "#904d00",
+                        "surface-dim": "#d9dadb",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#e2e2e4",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#897362",
+                        "error": "#ba1a1a",
+                        "primary-container": "#ff8c00",
+                        "on-primary-fixed-variant": "#6e3900",
+                        "primary": "#904d00",
+                        "secondary": "#435b9f",
+                        "on-primary-fixed": "#2f1500",
+                        "outline-variant": "#ddc1ae",
+                        "on-secondary-container": "#2a4486",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#b3c5ff",
+                        "tertiary-fixed-dim": "#c6c6c8",
+                        "secondary-fixed": "#dbe1ff",
+                        "primary-fixed": "#ffdcc3",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f3f4f5",
+                        "on-tertiary-fixed-variant": "#454749"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-nav { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .gradient-button { background: linear-gradient(135deg, #904d00 0%, #ff8c00 100%); }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r-0 bg-slate-50 dark:bg-slate-950 flex flex-col p-4 gap-2 z-50">
+<div class="mb-8 px-2 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">apartment</span>
+</div>
+<div>
+<div class="text-lg font-extrabold text-orange-600 leading-none">Admin Central</div>
+<div class="text-[10px] font-medium text-slate-500 uppercase tracking-widest mt-1">Luxury Management</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-300 ease-in-out font-manrope text-sm" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400 font-bold shadow-sm rounded-lg transition-all duration-300 ease-in-out font-manrope text-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bed</span>
+                Room Management
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-300 ease-in-out font-manrope text-sm" href="#">
+<span class="material-symbols-outlined">badge</span>
+                Staff Directory
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-300 ease-in-out font-manrope text-sm" href="#">
+<span class="material-symbols-outlined">analytics</span>
+                Property Analytics
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-300 ease-in-out font-manrope text-sm" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+                Bookings
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-300 ease-in-out font-manrope text-sm" href="#">
+<span class="material-symbols-outlined">payments</span>
+                Finance
+            </a>
+</nav>
+<button class="mt-4 gradient-button text-white font-headline text-sm font-bold py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-sm">add</span>
+            Add New Property
+        </button>
+<div class="mt-auto pt-4 border-t border-slate-200/60">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-error rounded-lg transition-colors font-manrope text-sm" href="#">
+<span class="material-symbols-outlined">logout</span>
+                Log Out
+            </a>
+</div>
+</aside>
+<div class="ml-64 min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="w-full sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none flex items-center justify-between px-8 py-3 w-full ml-auto">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-slate-500 font-headline text-sm">
+<span>Hotel Management</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-slate-900 font-bold">Add New Hotel Branch</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-lg">search</span>
+<input class="bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search operations..." type="text"/>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 mx-1"></div>
+<div class="flex items-center gap-3 pl-2">
+<div class="text-right">
+<div class="text-xs font-bold text-slate-900 leading-none">Nguyen Van A</div>
+<div class="text-[10px] text-slate-500 font-medium mt-1">Super Admin</div>
+</div>
+<img class="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm" data-alt="User Profile Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCUVoNcEOTPLQ60pPxWXDxNJKUpTugPvS59T6h2z8IZxomBmr1MpvEeRLEMbr5MzGdTNopgoYwR4IPlnNMxG8Bb1BpB3JEQOCj2-MUesCtneEmRxqKB4mA17oa0DgAlwUdmGTqxtAznjfpvWpaLTYBwvVMtDp21cCFTodpmn1TOEHlB5h-SvODfrFeNke-rJikooL_iGDsiBMhEf2E6wf-ejIPu8tGRV5bWXkl2Oh5-K9CN0LHMKd3N8Flr2LMZAUdQm-deknU4OwK"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-8 max-w-6xl mx-auto w-full">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h1 class="text-3xl font-extrabold text-on-surface tracking-tight mb-2">Create New Branch</h1>
+<p class="text-on-surface-variant font-body">Enter the details to initialize a new luxury hotel destination.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-6 py-2.5 rounded-full border border-outline-variant text-on-surface-variant font-semibold hover:bg-surface-container-low transition-colors text-sm">Cancel</button>
+<button class="px-6 py-2.5 rounded-full gradient-button text-white font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all text-sm">Save &amp; Create Branch</button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Left Column: Form Sections -->
+<div class="lg:col-span-2 space-y-8">
+<!-- Section 1: Branch Details -->
+<section class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-fixed-variant" style="font-variation-settings: 'FILL' 1;">info</span>
+</div>
+<h2 class="text-xl font-bold font-headline">Branch Details</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">Branch Name</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 text-sm transition-all placeholder:text-slate-400" placeholder="e.g. Muong Thanh Luxury Da Nang" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">Branch Code</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 text-sm transition-all placeholder:text-slate-400" placeholder="MTL-DAD-01" type="text"/>
+</div>
+<div class="md:col-span-2 space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">Operational Status</label>
+<div class="relative">
+<select class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 appearance-none focus:ring-2 focus:ring-primary/20 text-sm transition-all">
+<option value="active">Active</option>
+<option value="pre-opening">Pre-opening</option>
+<option value="maintenance">Maintenance</option>
+</select>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Location -->
+<section class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 rounded-lg bg-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-fixed-variant" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<h2 class="text-xl font-bold font-headline">Location &amp; Mapping</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">City</label>
+<div class="relative">
+<select class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 appearance-none focus:ring-2 focus:ring-primary/20 text-sm">
+<option>Da Nang</option>
+<option>Ha Noi</option>
+<option>Ho Chi Minh City</option>
+<option>Nha Trang</option>
+<option>Can Tho</option>
+</select>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">Landmark</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 text-sm placeholder:text-slate-400" placeholder="Near Dragon Bridge" type="text"/>
+</div>
+<div class="md:col-span-2 space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">Address</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 text-sm placeholder:text-slate-400" placeholder="270 Vo Nguyen Giap, Bac My Phu, Ngu Hanh Son" type="text"/>
+</div>
+<div class="md:col-span-2 space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">Google Maps Link</label>
+<div class="flex gap-2">
+<div class="relative flex-1">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-lg">link</span>
+<input class="w-full bg-surface-container-highest border-none rounded-xl pl-11 pr-4 py-3 focus:ring-2 focus:ring-primary/20 text-sm placeholder:text-slate-400" placeholder="https://goo.gl/maps/..." type="text"/>
+</div>
+<button class="bg-surface-container-high px-4 rounded-xl hover:bg-surface-dim transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">map</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Contact -->
+<section class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant" style="font-variation-settings: 'FILL' 1;">person</span>
+</div>
+<h2 class="text-xl font-bold font-headline">Contact &amp; Management</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">Branch Manager</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 text-sm" placeholder="Full name of manager" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">Reception Extension</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 text-sm" placeholder="e.g. 1001" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">Phone Number</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 text-sm" placeholder="+84 (0) 236 ..." type="tel"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">Email Address</label>
+<input class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 text-sm" placeholder="branch@muongthanh.vn" type="email"/>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Media & Meta -->
+<div class="space-y-8">
+<!-- Media Section -->
+<section class="bg-surface-container-lowest rounded-xl p-8 shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">image</span>
+</div>
+<h2 class="text-lg font-bold font-headline">Branch Media</h2>
+</div>
+<div class="space-y-4">
+<div class="aspect-video w-full rounded-xl border-2 border-dashed border-outline-variant bg-surface-container-low flex flex-col items-center justify-center p-6 text-center group cursor-pointer hover:bg-surface-container-high transition-all">
+<div class="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-primary text-3xl">cloud_upload</span>
+</div>
+<p class="text-sm font-bold text-on-surface mb-1">Upload Main Branch Image</p>
+<p class="text-xs text-on-surface-variant">Drag and drop or click to browse. Min size: 1920x1080px.</p>
+</div>
+<div class="flex items-center gap-2 p-3 rounded-lg bg-surface-container-low">
+<span class="material-symbols-outlined text-tertiary text-lg">description</span>
+<div class="flex-1">
+<div class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Recommended Format</div>
+<div class="text-xs font-medium text-on-surface">JPG, PNG, WebP (Max 5MB)</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Property Features Checklist (Generated Extra) -->
+<section class="bg-surface-container-lowest rounded-xl p-8 shadow-sm overflow-hidden relative">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
+<h2 class="text-lg font-bold font-headline mb-6 relative">Essential Amenities</h2>
+<div class="space-y-4 relative">
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="w-5 h-5 rounded border border-outline-variant flex items-center justify-center group-hover:border-primary transition-colors">
+<input class="hidden peer" type="checkbox"/>
+<span class="material-symbols-outlined text-xs text-white peer-checked:bg-primary peer-checked:text-white w-full h-full flex items-center justify-center rounded">check</span>
+</div>
+<span class="text-sm font-medium text-on-surface-variant">Swimming Pool</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="w-5 h-5 rounded border border-outline-variant flex items-center justify-center group-hover:border-primary transition-colors">
+<input class="hidden peer" type="checkbox"/>
+<span class="material-symbols-outlined text-xs text-white peer-checked:bg-primary peer-checked:text-white w-full h-full flex items-center justify-center rounded">check</span>
+</div>
+<span class="text-sm font-medium text-on-surface-variant">Spa &amp; Wellness Center</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="w-5 h-5 rounded border border-outline-variant flex items-center justify-center group-hover:border-primary transition-colors">
+<input class="hidden peer" type="checkbox"/>
+<span class="material-symbols-outlined text-xs text-white peer-checked:bg-primary peer-checked:text-white w-full h-full flex items-center justify-center rounded">check</span>
+</div>
+<span class="text-sm font-medium text-on-surface-variant">Conference Rooms</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="w-5 h-5 rounded border border-outline-variant flex items-center justify-center group-hover:border-primary transition-colors">
+<input class="hidden peer" type="checkbox"/>
+<span class="material-symbols-outlined text-xs text-white peer-checked:bg-primary peer-checked:text-white w-full h-full flex items-center justify-center rounded">check</span>
+</div>
+<span class="text-sm font-medium text-on-surface-variant">Executive Lounge</span>
+</label>
+</div>
+</section>
+<!-- Form Help -->
+<div class="bg-secondary p-6 rounded-xl text-white shadow-xl">
+<span class="material-symbols-outlined text-3xl mb-4">lightbulb</span>
+<h3 class="font-bold font-headline mb-2">Need Help?</h3>
+<p class="text-xs opacity-80 leading-relaxed">Ensure the Branch Code follows the global Muong Thanh naming convention (MTL-CITY-SEQ) to maintain analytics consistency.</p>
+</div>
+</div>
+</div>
+<!-- Footer-style Action bar for mobile or long scrolls -->
+<div class="mt-12 pt-8 border-t border-outline-variant/20 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="flex items-center gap-4 text-on-surface-variant text-sm">
+<span class="material-symbols-outlined">verified_user</span>
+<span>Action will be logged under Nguyen Van A's profile</span>
+</div>
+<div class="flex items-center gap-4 w-full md:w-auto">
+<button class="flex-1 md:flex-none px-8 py-3 rounded-full border border-outline-variant text-on-surface-variant font-bold hover:bg-surface-container-low transition-colors">Discard Changes</button>
+<button class="flex-1 md:flex-none px-10 py-3 rounded-full gradient-button text-white font-bold shadow-xl shadow-primary/30 hover:shadow-2xl hover:-translate-y-1 transition-all">Finalize &amp; Create Branch</button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

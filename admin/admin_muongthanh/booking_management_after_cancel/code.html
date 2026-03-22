@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Booking Management - Mường Thanh</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed": "#e2e2e4",
+              "secondary-container": "#9cb4fe",
+              "on-surface": "#191c1d",
+              "tertiary-container": "#a9aaac",
+              "on-primary-container": "#623200",
+              "surface-container": "#edeeef",
+              "primary-container": "#ff8c00",
+              "inverse-on-surface": "#f0f1f2",
+              "error": "#ba1a1a",
+              "surface-dim": "#d9dadb",
+              "on-background": "#191c1d",
+              "background": "#f8f9fa",
+              "on-tertiary-fixed-variant": "#454749",
+              "surface-container-highest": "#e1e3e4",
+              "on-surface-variant": "#564334",
+              "surface-variant": "#e1e3e4",
+              "on-secondary-fixed": "#00174a",
+              "on-secondary": "#ffffff",
+              "surface-tint": "#904d00",
+              "surface": "#f8f9fa",
+              "tertiary-fixed-dim": "#c6c6c8",
+              "tertiary": "#5d5e60",
+              "primary-fixed": "#ffdcc3",
+              "surface-container-lowest": "#ffffff",
+              "secondary-fixed-dim": "#b3c5ff",
+              "on-primary-fixed": "#2f1500",
+              "primary": "#904d00",
+              "on-secondary-container": "#2a4486",
+              "inverse-primary": "#ffb77d",
+              "on-primary-fixed-variant": "#6e3900",
+              "secondary-fixed": "#dbe1ff",
+              "on-tertiary-container": "#3d3f41",
+              "on-error": "#ffffff",
+              "on-secondary-fixed-variant": "#2a4386",
+              "on-primary": "#ffffff",
+              "secondary": "#435b9f",
+              "on-tertiary-fixed": "#1a1c1d",
+              "primary-fixed-dim": "#ffb77d",
+              "inverse-surface": "#2e3132",
+              "on-tertiary": "#ffffff",
+              "surface-container-low": "#f3f4f5",
+              "outline-variant": "#ddc1ae",
+              "surface-container-high": "#e7e8e9",
+              "outline": "#897362",
+              "error-container": "#ffdad6",
+              "surface-bright": "#f8f9fa",
+              "on-error-container": "#93000a"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8f9fa;
+        color: #191c1d;
+      }
+      h1, h2, h3, .font-manrope {
+        font-family: 'Manrope', sans-serif;
+      }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full flex flex-col p-4 h-screen w-64 bg-slate-50 dark:bg-slate-900 z-50">
+<div class="mb-8 px-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined" data-icon="apartment">apartment</span>
+</div>
+<div>
+<h1 class="text-2xl font-black tracking-tight text-slate-900 dark:text-slate-100 font-manrope">Mường Thanh</h1>
+<p class="text-xs font-medium text-slate-500 font-inter">Luxury Admin</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="bed">bed</span>
+<span class="font-medium text-sm">Room Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 font-bold" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span class="text-sm">Booking Management</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-2 pt-4 border-t border-slate-200/50">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-medium text-sm">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-medium text-sm">Support</span>
+</a>
+</div>
+</aside>
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 left-64 flex justify-between items-center px-8 z-40 w-full h-16 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md shadow-sm border-b border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined scale-75" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-highest border-none rounded-lg text-sm w-64 focus:ring-2 focus:ring-primary-fixed outline-none transition-all" placeholder="Search bookings..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="relative p-2 text-slate-500 hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full ring-2 ring-white"></span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</button>
+</div>
+<div class="flex items-center gap-3 pl-6 border-l border-slate-100">
+<div class="text-right">
+<p class="text-xs font-bold text-on-surface">Admin Console</p>
+<p class="text-[10px] text-on-surface-variant">General Manager</p>
+</div>
+<img alt="Admin Avatar" class="w-8 h-8 rounded-full object-cover ring-2 ring-slate-100" data-alt="Close up portrait of a professional male hotel manager" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_dg5vm5Eiud9Fb30RCBPNXFuOH8SPWSNOMX7xW5lKh9wp7YYChzb6ood_M7O2uo-PAjOYFTvXtQ131HXCHh5c6AYICzAizRv_glmYmdFtHcbZkLffUCQErLf0r0Cp77e6mHRZbh6tzMV2KOCRzn6dzG4KSs8Xp-FPUvS3S-e4SfqgIugxfQEKAKDR9YqFynqF0nEThGaNJwnxfmjs4a8UNktAszWOnKF6pkK58Puza80cQdHysJJzP8bDb7VTHmqIHAm9y7uUO6sk"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-10 pb-12 bg-background min-h-screen">
+<!-- Page Header & Actions -->
+<div class="flex justify-between items-end mb-10">
+<div>
+<h2 class="text-3xl font-extrabold tracking-tight text-on-surface font-manrope mb-2">Booking Management</h2>
+<div class="flex items-center gap-2">
+<span class="text-sm font-medium text-on-tertiary-container">Hotel Operations</span>
+<span class="w-1 h-1 bg-tertiary-container rounded-full"></span>
+<span class="text-sm font-medium text-on-tertiary-container">Jan 24, 2024</span>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-5 py-2.5 bg-surface-container-lowest border border-outline-variant/20 rounded-full text-secondary font-semibold text-sm hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="filter_list">filter_list</span>
+                    Filters
+                </button>
+<button class="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-tr from-primary to-primary-container text-white rounded-full font-bold text-sm shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+                    New Booking
+                </button>
+</div>
+</div>
+<!-- Metric Marquee Section -->
+<div class="grid grid-cols-4 gap-6 mb-10">
+<div class="bg-surface-container-lowest p-6 rounded-3xl border border-transparent shadow-sm">
+<p class="text-xs font-bold text-on-tertiary-container uppercase tracking-widest mb-4">Daily Occupancy</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-black font-manrope text-on-surface tracking-tighter">84%</span>
+<span class="text-xs font-bold text-primary">+2.4%</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-3xl border border-transparent shadow-sm">
+<p class="text-xs font-bold text-on-tertiary-container uppercase tracking-widest mb-4">Total Check-ins</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-black font-manrope text-on-surface tracking-tighter">142</span>
+<span class="text-xs font-bold text-on-tertiary-container">Today</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-3xl border border-transparent shadow-sm">
+<p class="text-xs font-bold text-on-tertiary-container uppercase tracking-widest mb-4">Active Reservations</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-black font-manrope text-on-surface tracking-tighter">1,208</span>
+<span class="text-xs font-bold text-primary">High</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-3xl border border-transparent shadow-sm">
+<p class="text-xs font-bold text-on-tertiary-container uppercase tracking-widest mb-4">Revenue Forecast</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-black font-manrope text-on-surface tracking-tighter">$42.8k</span>
+<span class="text-xs font-bold text-primary">On Target</span>
+</div>
+</div>
+</div>
+<!-- Data Table Section -->
+<div class="bg-surface-container-lowest rounded-[2rem] overflow-hidden shadow-sm">
+<div class="px-8 py-6 border-b border-surface-container flex justify-between items-center">
+<h3 class="text-lg font-bold font-manrope">Recent Reservations</h3>
+<div class="flex gap-4">
+<div class="flex bg-surface-container-low rounded-lg p-1">
+<button class="px-4 py-1.5 rounded-md bg-white text-xs font-bold shadow-sm">All</button>
+<button class="px-4 py-1.5 rounded-md text-xs font-medium text-on-tertiary-container hover:text-on-surface">Confirmed</button>
+<button class="px-4 py-1.5 rounded-md text-xs font-medium text-on-tertiary-container hover:text-on-surface">Pending</button>
+</div>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-8 py-4 text-[10px] font-black text-on-tertiary-container uppercase tracking-[0.2em]">Guest Name</th>
+<th class="px-8 py-4 text-[10px] font-black text-on-tertiary-container uppercase tracking-[0.2em]">Room Type</th>
+<th class="px-8 py-4 text-[10px] font-black text-on-tertiary-container uppercase tracking-[0.2em]">Check In / Out</th>
+<th class="px-8 py-4 text-[10px] font-black text-on-tertiary-container uppercase tracking-[0.2em]">Status</th>
+<th class="px-8 py-4 text-[10px] font-black text-on-tertiary-container uppercase tracking-[0.2em]">Payment</th>
+<th class="px-8 py-4 text-[10px] font-black text-on-tertiary-container uppercase tracking-[0.2em] text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Row 1 -->
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary font-bold text-xs">JD</div>
+<div>
+<p class="font-bold text-sm">Julianne Deville</p>
+<p class="text-xs text-on-tertiary-container">julianne.d@gmail.com</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<p class="text-sm font-medium">Executive Suite</p>
+<p class="text-[10px] text-on-tertiary-container">Room 402 • King Bed</p>
+</td>
+<td class="px-8 py-6">
+<p class="text-sm font-medium">Oct 12 - Oct 15</p>
+<p class="text-[10px] text-on-tertiary-container">3 Nights</p>
+</td>
+<td class="px-8 py-6">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-primary-container/10 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(144,77,0,0.5)]"></span>
+<span class="text-[10px] font-bold text-on-primary-fixed-variant uppercase tracking-wider">Confirmed</span>
+</div>
+</td>
+<td class="px-8 py-6">
+<p class="text-sm font-bold">$1,240.00</p>
+<p class="text-[10px] text-primary font-bold">Paid</p>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="p-2 hover:bg-white rounded-lg transition-colors text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary font-bold text-xs">MT</div>
+<div>
+<p class="font-bold text-sm">Marcus Thorne</p>
+<p class="text-xs text-on-tertiary-container">m.thorne@corporate.com</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<p class="text-sm font-medium">Deluxe Double</p>
+<p class="text-[10px] text-on-tertiary-container">Room 215 • Twin Beds</p>
+</td>
+<td class="px-8 py-6">
+<p class="text-sm font-medium">Oct 14 - Oct 16</p>
+<p class="text-[10px] text-on-tertiary-container">2 Nights</p>
+</td>
+<td class="px-8 py-6">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-secondary-container/10 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary shadow-[0_0_8px_rgba(67,91,159,0.5)]"></span>
+<span class="text-[10px] font-bold text-on-secondary-container uppercase tracking-wider">Checked In</span>
+</div>
+</td>
+<td class="px-8 py-6">
+<p class="text-sm font-bold">$840.00</p>
+<p class="text-[10px] text-on-tertiary-container">Due at checkout</p>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="p-2 hover:bg-white rounded-lg transition-colors text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-surface-container-low transition-colors">
+<td class="px-8 py-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-xs">SL</div>
+<div>
+<p class="font-bold text-sm">Sarah Lin</p>
+<p class="text-xs text-on-tertiary-container">sarah.lin@lifestyle.vn</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<p class="text-sm font-medium">Presidential Ocean</p>
+<p class="text-[10px] text-on-tertiary-container">Villa 02 • Private Pool</p>
+</td>
+<td class="px-8 py-6">
+<p class="text-sm font-medium">Oct 18 - Oct 22</p>
+<p class="text-[10px] text-on-tertiary-container">4 Nights</p>
+</td>
+<td class="px-8 py-6">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-highest rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span class="text-[10px] font-bold text-on-tertiary-container uppercase tracking-wider">Pending</span>
+</div>
+</td>
+<td class="px-8 py-6">
+<p class="text-sm font-bold">$4,500.00</p>
+<p class="text-[10px] text-error font-bold">Overdue</p>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="p-2 hover:bg-white rounded-lg transition-colors text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-8 py-6 flex justify-between items-center bg-surface-container-low/30">
+<p class="text-xs font-medium text-on-tertiary-container">Showing 3 of 1,208 entries</p>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/30 text-slate-400 hover:bg-white">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white text-xs font-bold">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/30 text-xs font-bold text-on-tertiary-container hover:bg-white">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/30 text-xs font-bold text-on-tertiary-container hover:bg-white">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg border border-outline-variant/30 text-slate-400 hover:bg-white">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- System Message / Cancellation Feedback (Subtle) -->
+<div class="fixed bottom-10 right-10 bg-inverse-surface text-inverse-on-surface px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 animate-in slide-in-from-bottom-5 duration-500">
+<span class="material-symbols-outlined text-primary-fixed" data-icon="info">info</span>
+<div class="pr-4 border-r border-white/10">
+<p class="text-sm font-bold">Booking cancelled</p>
+<p class="text-[10px] opacity-70">New booking form has been closed without saving.</p>
+</div>
+<button class="text-xs font-bold text-primary-fixed hover:text-white transition-colors">Dismiss</button>
+</div>
+</main>
+</body></html>
