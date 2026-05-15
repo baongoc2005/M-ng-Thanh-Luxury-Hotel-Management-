@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quản Lý Nhân Viên — Mường Thanh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="admin.css"/>
+  <script src="admin-i18n.js"></script>
+  <style>
+    /* ===== STAFF-SPECIFIC ===== */
+    .role-badge {
+      display: inline-block; font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.22rem 0.65rem; border-radius: 2px; white-space: nowrap;
+    }
+    .role-manager      { background: rgba(201,169,110,0.15); color: var(--gold);   border: 1px solid rgba(201,169,110,0.3); }
+    .role-receptionist { background: rgba(91,156,246,0.15);  color: var(--blue);   border: 1px solid rgba(91,156,246,0.3); }
+    .role-housekeeping { background: rgba(76,175,125,0.15);  color: var(--green);  border: 1px solid rgba(76,175,125,0.3); }
+    .role-concierge    { background: rgba(240,146,74,0.15);  color: var(--orange); border: 1px solid rgba(240,146,74,0.3); }
+    .role-security     { background: rgba(245,240,234,0.06); color: var(--muted);  border: 1px solid var(--border); }
+    .role-other        { background: rgba(245,240,234,0.06); color: var(--muted);  border: 1px solid var(--border); }
+
+    .status-dot {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      font-size: 0.75rem;
+    }
+    .status-dot::before {
+      content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+    }
+    .status-dot.active::before  { background: var(--green); box-shadow: 0 0 6px rgba(76,175,125,0.5); }
+    .status-dot.inactive::before{ background: var(--muted); }
+    .status-dot.active   { color: var(--green); }
+    .status-dot.inactive { color: var(--muted); }
+
+    .staff-name  { font-weight: 500; color: var(--white); }
+    .staff-hotel { font-size: 0.7rem; color: var(--muted); margin-top: 0.2rem; }
+
+    .action-btns { display: flex; gap: 0.5rem; white-space: nowrap; }
+    .btn-edit {
+      background: transparent; border: 1px solid var(--border); color: var(--muted);
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.35rem 0.8rem; transition: all 0.2s; cursor: pointer;
+      font-family: var(--font-sans);
+    }
+    .btn-edit:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-deactivate {
+      background: transparent; border: 1px solid var(--border); color: var(--muted);
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.35rem 0.8rem; transition: all 0.2s; cursor: pointer;
+      font-family: var(--font-sans);
+    }
+    .btn-deactivate:hover { border-color: var(--red); color: var(--red); }
+    .btn-restore {
+      background: transparent; border: 1px solid rgba(76,175,125,0.3); color: var(--green);
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.35rem 0.8rem; transition: all 0.2s; cursor: pointer;
+      font-family: var(--font-sans);
+    }
+    .btn-restore:hover { background: rgba(76,175,125,0.08); }
+
+    /* Inactive row */
+    .row-inactive td { opacity: 0.45; }
+    .row-inactive:hover td { opacity: 0.7; }
+
+    /* Confirm modal */
+    .confirm-body {
+      padding: 2rem;
+    }
+    .confirm-body p { color: var(--muted); line-height: 1.7; }
+    .confirm-body strong { color: var(--white); }
+    .btn-danger {
+      background: var(--red); color: var(--white);
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.8rem 1.8rem; border: none; cursor: pointer;
+      transition: background 0.2s; font-family: var(--font-sans);
+    }
+    .btn-danger:hover { background: #c94545; }
+
+    /* Section label in modal */
+    .mfield-note {
+      font-size: 0.7rem; color: var(--muted); font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="adm-header">
+    <a href="../index.html" class="adm-logo">Mường Thanh</a>
+    <nav class="adm-nav">
+      <a href="dashboard.html" class="adm-nav-link">Dashboard</a>
+      <a href="index.html" class="adm-nav-link">Đặt Phòng</a>
+      <a href="customers.html" class="adm-nav-link">Khách Hàng</a>
+      <a href="hotels.html" class="adm-nav-link">Khách Sạn</a>
+      <a href="staff.html" class="adm-nav-link active">Nhân Viên</a>
+      <a href="reviews.html" class="adm-nav-link">Reviews</a>
+      <a href="promotions.html" class="adm-nav-link">Khuyến Mãi</a>
+      <a href="payments.html"  class="adm-nav-link">Thanh Toán</a>
+      <a href="emails.html"    class="adm-nav-link">Email</a>
+      <a href="settings.html"  class="adm-nav-link">Cài Đặt</a>
+    </nav>
+    <button class="btn-add-manual" id="btnAddStaff" data-adm-i18n="stf.btn_add">+ Thêm nhân viên</button>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-val" id="statTotal">—</span>
+      <span class="stat-lbl" data-adm-i18n="stf.stat_total">Tổng nhân viên</span>
+    </div>
+    <div class="stat-card green">
+      <span class="stat-val" id="statActive">—</span>
+      <span class="stat-lbl" data-adm-i18n="stf.stat_working">Đang làm việc</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-val" id="statInactive">—</span>
+      <span class="stat-lbl" data-adm-i18n="stf.stat_inactive">Đã nghỉ việc</span>
+    </div>
+    <div class="stat-card gold">
+      <span class="stat-val" id="statManagers">—</span>
+      <span class="stat-lbl" data-adm-i18n="stf.stat_managers">Quản lý</span>
+    </div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label>Khách sạn</label>
+      <select id="fHotel">
+        <option value="">Tất cả khách sạn</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Vai trò</label>
+      <select id="fRole">
+        <option value="">Tất cả vai trò</option>
+        <option value="manager">Quản lý</option>
+        <option value="receptionist">Lễ tân</option>
+        <option value="housekeeping">Buồng phòng</option>
+        <option value="concierge">Concierge</option>
+        <option value="security">Bảo vệ</option>
+        <option value="other">Khác</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Trạng thái</label>
+      <select id="fStatus">
+        <option value="">Tất cả</option>
+        <option value="1" selected>Đang làm việc</option>
+        <option value="0">Đã nghỉ việc</option>
+      </select>
+    </div>
+    <div class="filter-group search-group">
+      <label>Tìm kiếm</label>
+      <input type="text" id="fSearch" placeholder="Tên, email, điện thoại..."/>
+    </div>
+    <button class="btn-reset" id="btnReset">Xóa lọc</button>
+  </div>
+
+  <!-- RESULTS INFO -->
+  <div class="results-info">
+    <span id="resultsInfo">Đang tải...</span>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table class="bookings-table" id="staffTable">
+      <thead>
+        <tr>
+          <th data-adm-i18n="stf.th_name">Họ tên</th>
+          <th data-adm-i18n="stf.th_hotel">Khách sạn</th>
+          <th data-adm-i18n="stf.th_role">Vai trò</th>
+          <th data-adm-i18n="stf.th_email">Email</th>
+          <th data-adm-i18n="stf.th_phone">Điện thoại</th>
+          <th data-adm-i18n="stf.th_joined">Ngày vào</th>
+          <th data-adm-i18n="stf.th_status">Trạng thái</th>
+          <th data-adm-i18n="stf.th_action">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="8" class="loading-row">Đang tải dữ liệu...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MODAL: ADD / EDIT STAFF -->
+  <div class="modal-overlay hidden" id="staffModal">
+    <div class="modal" style="max-width:640px">
+      <div class="modal-header">
+        <h2 id="modalTitle">Thêm Nhân Viên Mới</h2>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <form class="modal-form" id="staffForm" novalidate>
+        <input type="hidden" id="staffId"/>
+        <div class="mform-grid">
+
+          <div class="mfield full">
+            <label>Họ và tên <span class="req">*</span></label>
+            <input type="text" id="fFullName" placeholder="Nguyễn Văn An" required/>
+          </div>
+
+          <div class="mfield">
+            <label>Khách sạn</label>
+            <select id="fHotelId">
+              <option value="">— Chọn khách sạn —</option>
+            </select>
+          </div>
+
+          <div class="mfield">
+            <label>Vai trò <span class="req">*</span></label>
+            <select id="fRole" required>
+              <option value="receptionist">Lễ tân</option>
+              <option value="manager">Quản lý</option>
+              <option value="housekeeping">Buồng phòng</option>
+              <option value="concierge">Concierge</option>
+              <option value="security">Bảo vệ</option>
+              <option value="other">Khác</option>
+            </select>
+          </div>
+
+          <div class="mfield">
+            <label>Email</label>
+            <input type="email" id="fEmail" placeholder="nhanvien@muongthanh.com"/>
+          </div>
+
+          <div class="mfield">
+            <label>Điện thoại</label>
+            <input type="text" id="fPhone" placeholder="0901 234 567"/>
+          </div>
+
+          <div class="mfield">
+            <label>Ngày vào làm</label>
+            <input type="date" id="fJoinedDate"/>
+          </div>
+
+          <div class="mfield">
+            <label>Trạng thái</label>
+            <select id="fActive">
+              <option value="1">Đang làm việc</option>
+              <option value="0">Đã nghỉ việc</option>
+            </select>
+          </div>
+
+          <div class="mfield full">
+            <label>Ghi chú</label>
+            <textarea id="fNotes" rows="3" placeholder="Ghi chú về nhân viên..."></textarea>
+          </div>
+
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="btnCancel">Hủy</button>
+          <button type="submit" class="btn-save" id="btnSave">Lưu nhân viên</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: CONFIRM DEACTIVATE -->
+  <div class="modal-overlay hidden" id="confirmModal">
+    <div class="modal" style="max-width:420px">
+      <div class="modal-header">
+        <h2>Xác Nhận Nghỉ Việc</h2>
+        <button class="modal-close" id="confirmClose">✕</button>
+      </div>
+      <div class="confirm-body">
+        <p>
+          Nhân viên <strong id="confirmName"></strong> sẽ được đánh dấu <strong style="color:var(--red)">nghỉ việc</strong>.<br/>
+          Thông tin vẫn được lưu lại trong hệ thống.
+        </p>
+        <div class="modal-actions" style="margin-top:1.5rem">
+          <button type="button" class="btn-cancel" id="confirmCancelBtn">Hủy</button>
+          <button type="button" class="btn-danger" id="confirmOkBtn">Xác nhận nghỉ việc</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="staff.js"></script>
+  <script src="admin-auth.js"></script>
+</body>
+</html>

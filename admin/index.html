@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quản Lý Đặt Phòng — Mường Thanh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="admin.css"/>
+  <script src="admin-i18n.js"></script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="adm-header">
+    <a href="../index.html" class="adm-logo">Mường Thanh</a>
+    <nav class="adm-nav">
+      <a href="dashboard.html" class="adm-nav-link">Dashboard</a>
+      <a href="index.html" class="adm-nav-link active">Đặt Phòng</a>
+      <a href="customers.html" class="adm-nav-link">Khách Hàng</a>
+      <a href="hotels.html" class="adm-nav-link">Khách Sạn</a>
+      <a href="staff.html" class="adm-nav-link">Nhân Viên</a>
+      <a href="reviews.html" class="adm-nav-link">Reviews</a>
+      <a href="promotions.html" class="adm-nav-link">Khuyến Mãi</a>
+      <a href="payments.html"  class="adm-nav-link">Thanh Toán</a>
+      <a href="emails.html"    class="adm-nav-link">Email</a>
+      <a href="settings.html"  class="adm-nav-link">Cài Đặt</a>
+    </nav>
+    <button class="btn-add-manual" id="btnAddManual" data-adm-i18n="bk.btn_add_manual">+ Thêm đơn thủ công</button>
+  </header>
+
+  <!-- STATS ROW -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card">
+      <span class="stat-val" id="statTotal">—</span>
+      <span class="stat-lbl" data-adm-i18n="dash.total_bookings">Tổng đơn</span>
+    </div>
+    <div class="stat-card gold">
+      <span class="stat-val" id="statRevenue">—</span>
+      <span class="stat-lbl" data-adm-i18n="dash.total_revenue">Doanh thu</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-val" id="statPending">—</span>
+      <span class="stat-lbl" data-adm-i18n="status.pending">Chờ xử lý</span>
+    </div>
+    <div class="stat-card green">
+      <span class="stat-val" id="statConfirmed">—</span>
+      <span class="stat-lbl" data-adm-i18n="status.confirmed">Đã xác nhận</span>
+    </div>
+    <!-- Nguồn -->
+    <div class="stat-source" id="statSources"></div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label data-adm-i18n="dash.th_source">Nguồn</label>
+      <select id="fSource">
+        <option value="">Tất cả</option>
+        <option value="website">Website</option>
+        <option value="booking_com">Booking.com</option>
+        <option value="traveloka">Traveloka</option>
+        <option value="agoda">Agoda</option>
+        <option value="hotline">Hotline</option>
+        <option value="zalo">Zalo</option>
+        <option value="facebook">Facebook</option>
+        <option value="other">Khác</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label data-adm-i18n="dash.th_status">Trạng thái</label>
+      <select id="fStatus">
+        <option value="" data-adm-i18n="bk.filter_status">Tất cả</option>
+        <option value="pending" data-adm-i18n="status.pending">Chờ xử lý</option>
+        <option value="confirmed" data-adm-i18n="status.confirmed">Đã xác nhận</option>
+        <option value="cancelled" data-adm-i18n="status.cancelled">Đã hủy</option>
+        <option value="checked_in" data-adm-i18n="status.checked_in">Đã nhận phòng</option>
+        <option value="checked_out" data-adm-i18n="status.checked_out">Đã trả phòng</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Check-in từ</label>
+      <input type="date" id="fDateFrom"/>
+    </div>
+    <div class="filter-group">
+      <label>Check-in đến</label>
+      <input type="date" id="fDateTo"/>
+    </div>
+    <div class="filter-group search-group">
+      <label>Tìm kiếm</label>
+      <input type="text" id="fSearch" placeholder="Tên, email, mã đặt phòng..." data-adm-i18n-ph="bk.search_ph"/>
+    </div>
+    <button class="btn-reset" id="btnReset">Xóa lọc</button>
+  </div>
+
+  <!-- RESULTS INFO -->
+  <div class="results-info">
+    <span id="resultsInfo">Đang tải...</span>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table class="bookings-table" id="bookingsTable">
+      <thead>
+        <tr>
+          <th data-adm-i18n="bk.th_ref">Mã đặt phòng</th>
+          <th data-adm-i18n="dash.th_source">Nguồn</th>
+          <th data-adm-i18n="bk.th_guest">Khách</th>
+          <th data-adm-i18n="bk.th_hotel">Khách sạn / Phòng</th>
+          <th>Check-in</th>
+          <th>Check-out</th>
+          <th data-adm-i18n="bk.th_total">Tổng tiền</th>
+          <th data-adm-i18n="dash.th_status">Trạng thái</th>
+          <th>Ghi chú</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="9" class="loading-row">Đang tải dữ liệu...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="pagination" id="pagination"></div>
+
+  <!-- MODAL: THÊM ĐƠN THỦ CÔNG -->
+  <div class="modal-overlay hidden" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Thêm Đơn Đặt Phòng Thủ Công</h2>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <form class="modal-form" id="manualForm">
+        <div class="mform-grid">
+
+          <!-- Nguồn -->
+          <div class="mfield full">
+            <label>Nguồn <span class="req">*</span></label>
+            <select name="source" required>
+              <option value="hotline">📞 Hotline</option>
+              <option value="zalo">💬 Zalo</option>
+              <option value="facebook">📘 Facebook</option>
+              <option value="booking_com">🔵 Booking.com</option>
+              <option value="traveloka">🟠 Traveloka</option>
+              <option value="agoda">🔴 Agoda</option>
+              <option value="other">Khác</option>
+            </select>
+          </div>
+
+          <!-- Khách sạn -->
+          <div class="mfield full">
+            <label>Khách sạn <span class="req">*</span></label>
+            <select name="hotel_slug" id="mHotelSlug" required></select>
+          </div>
+          <div class="mfield full">
+            <label>Loại phòng <span class="req">*</span></label>
+            <select name="room_type" id="mRoomType" required></select>
+          </div>
+
+          <!-- Ngày -->
+          <div class="mfield">
+            <label>Nhận phòng <span class="req">*</span></label>
+            <input type="date" name="check_in" id="mCheckIn" required/>
+          </div>
+          <div class="mfield">
+            <label>Trả phòng <span class="req">*</span></label>
+            <input type="date" name="check_out" id="mCheckOut" required/>
+          </div>
+          <div class="mfield">
+            <label>Số khách</label>
+            <select name="guests">
+              <option value="1">1</option>
+              <option value="2" selected>2</option>
+              <option value="3">3</option>
+              <option value="4">4+</option>
+            </select>
+          </div>
+          <div class="mfield">
+            <label>Số đêm</label>
+            <input type="number" name="nights" id="mNights" value="1" min="1" readonly/>
+          </div>
+
+          <!-- Khách hàng -->
+          <div class="mfield">
+            <label>Họ <span class="req">*</span></label>
+            <input type="text" name="last_name" placeholder="Nguyễn" required/>
+          </div>
+          <div class="mfield">
+            <label>Tên <span class="req">*</span></label>
+            <input type="text" name="first_name" placeholder="Văn An" required/>
+          </div>
+          <div class="mfield">
+            <label>Điện thoại <span class="req">*</span></label>
+            <input type="tel" name="phone" placeholder="0901 234 567" required/>
+          </div>
+          <div class="mfield">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="email@example.com"/>
+          </div>
+
+          <!-- Thanh toán -->
+          <div class="mfield">
+            <label>Giá/đêm (VNĐ)</label>
+            <input type="number" name="price_per_night" id="mPriceNight" placeholder="0" min="0"/>
+          </div>
+          <div class="mfield">
+            <label>Tổng tiền (VNĐ)</label>
+            <input type="number" name="grand_total" id="mGrandTotal" placeholder="0" min="0"/>
+          </div>
+          <div class="mfield">
+            <label>Thanh toán</label>
+            <select name="payment_method">
+              <option value="cash">Tiền mặt</option>
+              <option value="transfer">Chuyển khoản</option>
+              <option value="card">Thẻ</option>
+              <option value="momo">MoMo</option>
+              <option value="ota">OTA</option>
+            </select>
+          </div>
+          <div class="mfield">
+            <label>Trạng thái</label>
+            <select name="status">
+              <option value="confirmed">Đã xác nhận</option>
+              <option value="pending">Chờ xử lý</option>
+            </select>
+          </div>
+
+          <!-- Ghi chú -->
+          <div class="mfield full">
+            <label>Ghi chú</label>
+            <textarea name="notes" rows="2" placeholder="Yêu cầu đặc biệt, ghi chú nội bộ..."></textarea>
+          </div>
+
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="btnCancel">Hủy</button>
+          <button type="submit" class="btn-save">Lưu đơn</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../data/hotels.js"></script>
+  <script src="admin.js"></script>
+  <script src="admin-auth.js"></script>
+</body>
+</html>

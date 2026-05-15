@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Khuyến Mãi — Mường Thanh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="admin.css"/>
+  <script src="admin-i18n.js"></script>
+  <style>
+    /* ===== PROMOTIONS PAGE ===== */
+
+    /* Promotion code display */
+    .promo-code {
+      font-family: var(--font-sans); font-size: 0.82rem; font-weight: 600;
+      letter-spacing: 0.12em; color: var(--gold);
+      background: rgba(201,169,110,0.1); border: 1px solid rgba(201,169,110,0.2);
+      padding: 0.2rem 0.7rem; display: inline-block; border-radius: 2px;
+    }
+
+    /* Discount display */
+    .discount-val {
+      font-family: var(--font-serif); font-size: 1rem; font-weight: 400;
+      color: var(--green); white-space: nowrap;
+    }
+    .discount-type-label {
+      font-size: 0.6rem; color: var(--muted); margin-top: 0.15rem;
+    }
+
+    /* Validity dates */
+    .validity-range { font-size: 0.78rem; color: var(--white); white-space: nowrap; }
+    .validity-range .date-sep { color: var(--muted); margin: 0 0.3rem; }
+
+    /* Usage bar */
+    .usage-wrap { display: flex; flex-direction: column; gap: 0.3rem; min-width: 100px; }
+    .usage-text { font-size: 0.78rem; color: var(--white); }
+    .usage-bar-bg {
+      height: 3px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden;
+    }
+    .usage-bar-fill {
+      height: 100%; border-radius: 2px;
+      background: var(--gold); transition: width 0.4s ease;
+    }
+    .usage-unlimited { font-size: 0.72rem; color: var(--muted); }
+
+    /* Applies-to badge */
+    .applies-badge {
+      display: inline-block; font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.2rem 0.6rem; border-radius: 2px; white-space: nowrap;
+    }
+    .applies-all        { background: rgba(245,240,234,0.06); color: var(--muted); }
+    .applies-luxury     { background: rgba(201,169,110,0.15); color: var(--gold); }
+    .applies-grand      { background: rgba(91,156,246,0.15);  color: var(--blue); }
+    .applies-holiday    { background: rgba(76,175,125,0.15);  color: var(--green); }
+    .applies-muongthanh { background: rgba(240,146,74,0.12);  color: var(--orange); }
+
+    /* Promo status badges */
+    .badge-promo {
+      display: inline-block; font-size: 0.58rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.7rem;
+      border-radius: 2px; white-space: nowrap;
+    }
+    .badge-active   { background: rgba(76,175,125,0.15);  color: var(--green);  border: 1px solid rgba(76,175,125,0.3); }
+    .badge-inactive { background: rgba(255,255,255,0.05); color: var(--muted);  border: 1px solid var(--border); }
+    .badge-expired  { background: rgba(224,85,85,0.12);   color: var(--red);    border: 1px solid rgba(224,85,85,0.25); }
+    .badge-upcoming { background: rgba(91,156,246,0.12);  color: var(--blue);   border: 1px solid rgba(91,156,246,0.25); }
+
+    /* Action buttons */
+    .action-btns { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .btn-edit-promo {
+      background: transparent; border: 1px solid var(--border); color: var(--muted);
+      font-size: 0.62rem; letter-spacing: 0.07em; padding: 0.3rem 0.7rem;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .btn-edit-promo:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-toggle-promo {
+      background: transparent; border: 1px solid var(--border); color: var(--muted);
+      font-size: 0.62rem; letter-spacing: 0.07em; padding: 0.3rem 0.7rem;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .btn-toggle-promo.is-active { border-color: rgba(76,175,125,0.4); color: var(--green); }
+    .btn-toggle-promo.is-active:hover { background: rgba(76,175,125,0.1); }
+    .btn-toggle-promo:not(.is-active):hover { border-color: var(--orange); color: var(--orange); }
+    .btn-del-promo {
+      background: transparent; border: 1px solid var(--border); color: var(--muted);
+      font-size: 0.62rem; letter-spacing: 0.07em; padding: 0.3rem 0.7rem;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .btn-del-promo:hover { border-color: var(--red); color: var(--red); }
+
+    /* Stat card variants */
+    .stat-card.blue .stat-val { color: var(--blue); }
+    .stat-card.blue { border-top: 2px solid var(--blue); }
+    .stat-card.orange .stat-val { color: var(--orange); }
+    .stat-card.orange { border-top: 2px solid var(--orange); }
+
+    /* Modal: active toggle */
+    .toggle-row {
+      display: flex; align-items: center; gap: 1rem;
+      background: var(--card); padding: 0.9rem 1.1rem;
+    }
+    .toggle-label {
+      font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold);
+    }
+    .toggle-switch {
+      position: relative; width: 44px; height: 24px; cursor: pointer;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; inset: 0; border-radius: 24px;
+      background: rgba(255,255,255,0.1); transition: background 0.3s;
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute;
+      width: 18px; height: 18px; border-radius: 50%;
+      left: 3px; top: 3px;
+      background: var(--muted); transition: transform 0.3s, background 0.3s;
+    }
+    .toggle-switch input:checked + .toggle-slider { background: rgba(76,175,125,0.4); }
+    .toggle-switch input:checked + .toggle-slider::before {
+      transform: translateX(20px); background: var(--green);
+    }
+    .toggle-status-text { font-size: 0.78rem; color: var(--muted); }
+    .toggle-status-text.on { color: var(--green); }
+
+    /* Search in filter bar */
+    .filter-group select, .filter-group input { min-width: 160px; }
+
+    /* Min nights display */
+    .min-nights-cell { font-size: 0.78rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="adm-header">
+    <a href="../index.html" class="adm-logo">Mường Thanh</a>
+    <nav class="adm-nav">
+      <a href="dashboard.html" class="adm-nav-link">Dashboard</a>
+      <a href="index.html" class="adm-nav-link">Đặt Phòng</a>
+      <a href="customers.html" class="adm-nav-link">Khách Hàng</a>
+      <a href="hotels.html" class="adm-nav-link">Khách Sạn</a>
+      <a href="staff.html" class="adm-nav-link">Nhân Viên</a>
+      <a href="reviews.html" class="adm-nav-link">Reviews</a>
+      <a href="promotions.html" class="adm-nav-link active">Khuyến Mãi</a>
+      <a href="payments.html"  class="adm-nav-link">Thanh Toán</a>
+      <a href="emails.html"    class="adm-nav-link">Email</a>
+      <a href="settings.html"  class="adm-nav-link">Cài Đặt</a>
+    </nav>
+    <button class="btn-add-manual" id="btnAddPromo" data-adm-i18n="prm.btn_add">+ Tạo mã khuyến mãi</button>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-val" id="statTotal">—</span>
+      <span class="stat-lbl" data-adm-i18n="prm.stat_total">Tổng mã</span>
+    </div>
+    <div class="stat-card green">
+      <span class="stat-val" id="statActive">—</span>
+      <span class="stat-lbl" data-adm-i18n="prm.stat_active">Đang hoạt động</span>
+    </div>
+    <div class="stat-card gold">
+      <span class="stat-val" id="statUsedMonth">—</span>
+      <span class="stat-lbl" data-adm-i18n="prm.stat_used_month">Đã dùng tháng này</span>
+    </div>
+    <div class="stat-card orange">
+      <span class="stat-val" id="statExpiringSoon">—</span>
+      <span class="stat-lbl" data-adm-i18n="prm.stat_expiring">Hết hạn sắp tới</span>
+    </div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label>Trạng thái</label>
+      <select id="fStatus">
+        <option value="">Tất cả</option>
+        <option value="active">Đang hoạt động</option>
+        <option value="inactive">Đã tắt</option>
+        <option value="expired">Hết hạn</option>
+        <option value="upcoming">Chưa bắt đầu</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Áp dụng cho</label>
+      <select id="fApplies">
+        <option value="">Tất cả</option>
+        <option value="all">Tất cả khách sạn</option>
+        <option value="luxury">Luxury</option>
+        <option value="grand">Grand</option>
+        <option value="holiday">Holiday</option>
+        <option value="muongthanh">Mường Thanh</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Loại giảm</label>
+      <select id="fType">
+        <option value="">Tất cả</option>
+        <option value="percent">Phần trăm (%)</option>
+        <option value="fixed">Số tiền cố định</option>
+      </select>
+    </div>
+    <div class="filter-group search-group">
+      <label>Tìm kiếm</label>
+      <input type="text" id="fSearch" placeholder="Mã, tên khuyến mãi..."/>
+    </div>
+    <button class="btn-reset" id="btnReset">Xóa lọc</button>
+  </div>
+
+  <!-- RESULTS INFO -->
+  <div class="results-info">
+    <span id="resultsInfo">Đang tải...</span>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table class="bookings-table" id="promosTable">
+      <thead>
+        <tr>
+          <th data-adm-i18n="prm.th_code">Mã</th>
+          <th data-adm-i18n="prm.th_name">Tên khuyến mãi</th>
+          <th data-adm-i18n="prm.th_discount">Loại giảm</th>
+          <th data-adm-i18n="prm.th_applies">Áp dụng cho</th>
+          <th data-adm-i18n="prm.th_validity">Hiệu lực</th>
+          <th data-adm-i18n="prm.th_usage">Đã dùng / Giới hạn</th>
+          <th data-adm-i18n="prm.th_status">Trạng thái</th>
+          <th data-adm-i18n="prm.th_action">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="8" class="loading-row">Đang tải dữ liệu...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MODAL: THÊM / SỬA MÃ KHUYẾN MÃI -->
+  <div class="modal-overlay hidden" id="promoModal">
+    <div class="modal" style="max-width:700px">
+      <div class="modal-header">
+        <h2 id="modalTitle">Tạo Mã Khuyến Mãi</h2>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <form class="modal-form" id="promoForm" autocomplete="off">
+        <input type="hidden" id="promoId"/>
+
+        <div class="mform-grid">
+
+          <!-- Mã code -->
+          <div class="mfield">
+            <label>Mã khuyến mãi <span class="req">*</span></label>
+            <input type="text" id="fCode" placeholder="VD: LUXURY20" required
+                   maxlength="30" style="text-transform:uppercase;letter-spacing:0.12em;font-weight:600;color:var(--gold)"/>
+          </div>
+
+          <!-- Tên -->
+          <div class="mfield">
+            <label>Tên khuyến mãi <span class="req">*</span></label>
+            <input type="text" id="fName" placeholder="Giảm 20% cuối tuần" required/>
+          </div>
+
+          <!-- Loại giảm -->
+          <div class="mfield">
+            <label>Loại giảm <span class="req">*</span></label>
+            <select id="fDiscountType">
+              <option value="percent">Phần trăm (%)</option>
+              <option value="fixed">Số tiền cố định (VNĐ)</option>
+            </select>
+          </div>
+
+          <!-- Giá trị giảm -->
+          <div class="mfield">
+            <label>Giá trị giảm <span class="req">*</span></label>
+            <input type="number" id="fDiscountValue" placeholder="20" min="0" step="0.01" required/>
+          </div>
+
+          <!-- Số đêm tối thiểu -->
+          <div class="mfield">
+            <label>Số đêm tối thiểu</label>
+            <input type="number" id="fMinNights" placeholder="1" min="1" value="1"/>
+          </div>
+
+          <!-- Áp dụng cho -->
+          <div class="mfield">
+            <label>Áp dụng cho</label>
+            <select id="fAppliesTo">
+              <option value="all">Tất cả khách sạn</option>
+              <option value="luxury">Luxury</option>
+              <option value="grand">Grand</option>
+              <option value="holiday">Holiday</option>
+              <option value="muongthanh">Mường Thanh</option>
+            </select>
+          </div>
+
+          <!-- Ngày bắt đầu -->
+          <div class="mfield">
+            <label>Ngày bắt đầu</label>
+            <input type="date" id="fValidFrom"/>
+          </div>
+
+          <!-- Ngày kết thúc -->
+          <div class="mfield">
+            <label>Ngày kết thúc</label>
+            <input type="date" id="fValidTo"/>
+          </div>
+
+          <!-- Giới hạn sử dụng -->
+          <div class="mfield">
+            <label>Giới hạn sử dụng <span style="color:var(--muted);font-size:0.58rem">(0 = không giới hạn)</span></label>
+            <input type="number" id="fUsageLimit" placeholder="0" min="0" value="0"/>
+          </div>
+
+          <!-- Trạng thái active -->
+          <div class="mfield" style="justify-content:center">
+            <label>Kích hoạt</label>
+            <div style="display:flex;align-items:center;gap:0.8rem;padding-top:0.3rem">
+              <label class="toggle-switch">
+                <input type="checkbox" id="fActive" checked/>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-status-text on" id="activeStatusText">Đang hoạt động</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="btnCancel">Hủy</button>
+          <button type="submit" class="btn-save" id="btnSave">Lưu mã</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: XÁC NHẬN XÓA -->
+  <div class="modal-overlay hidden" id="deleteModal">
+    <div class="modal" style="max-width:400px">
+      <div class="modal-header">
+        <h2>Xác nhận xóa</h2>
+        <button class="modal-close" id="deleteModalClose">✕</button>
+      </div>
+      <div style="padding:2rem">
+        <p style="color:var(--muted);line-height:1.7">
+          Mã khuyến mãi <strong id="deletePromoCode" style="color:var(--gold)"></strong> sẽ bị xóa vĩnh viễn.<br/>
+          Hành động này <strong style="color:var(--red)">không thể hoàn tác</strong>.
+        </p>
+        <div class="modal-actions" style="margin-top:1.5rem">
+          <button type="button" class="btn-cancel" id="deleteCancelBtn">Hủy</button>
+          <button type="button" id="deleteConfirmBtn" style="background:var(--red);color:var(--white);font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:0.8rem 2rem;border:none;cursor:pointer;transition:opacity 0.2s;">Xóa mã</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="promotions.js"></script>
+  <script src="admin-auth.js"></script>
+</body>
+</html>

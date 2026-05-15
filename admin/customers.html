@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quản Lý Khách Hàng — Mường Thanh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="admin.css"/>
+  <script src="admin-i18n.js"></script>
+  <style>
+    /* ===== CUSTOMERS-SPECIFIC ===== */
+    .vip-star {
+      color: var(--gold);
+      font-size: 1rem;
+      line-height: 1;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.2s;
+    }
+    .vip-star:hover { transform: scale(1.3); }
+    .vip-star.off { color: var(--border); filter: brightness(2); }
+
+    .name-cell { cursor: pointer; }
+    .name-cell:hover .cust-name { color: var(--gold); }
+    .cust-name { font-weight: 500; color: var(--white); transition: color 0.2s; }
+    .cust-sub  { font-size: 0.7rem; color: var(--muted); margin-top: 0.2rem; }
+
+    .notes-inline {
+      background: transparent; border: none; border-bottom: 1px solid transparent;
+      color: var(--muted); font-size: 0.78rem; width: 100%; outline: none;
+      transition: border-color 0.2s; padding: 0.1rem 0;
+      font-family: var(--font-sans);
+    }
+    .notes-inline:focus { border-bottom-color: var(--gold); color: var(--white); }
+    .notes-inline::placeholder { color: rgba(245,240,234,0.15); }
+
+    /* ===== CUSTOMER DETAIL MODAL ===== */
+    .cust-detail-header {
+      padding: 2rem 2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; gap: 1.5rem; align-items: flex-start;
+    }
+    .cust-avatar {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: rgba(201,169,110,0.12);
+      border: 1px solid rgba(201,169,110,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-serif); font-size: 1.4rem; color: var(--gold);
+      flex-shrink: 0;
+    }
+    .cust-detail-info { flex: 1; }
+    .cust-detail-name {
+      font-family: var(--font-serif); font-size: 1.8rem; font-weight: 300;
+      color: var(--white); display: flex; align-items: center; gap: 0.6rem;
+    }
+    .cust-detail-meta {
+      display: flex; flex-wrap: wrap; gap: 1.2rem; margin-top: 0.6rem;
+    }
+    .cust-detail-meta span { font-size: 0.75rem; color: var(--muted); }
+    .cust-detail-meta strong { color: var(--white); }
+
+    .cust-kpi-row {
+      display: flex; gap: 1px; background: var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .cust-kpi {
+      background: var(--card); padding: 1rem 1.5rem;
+      display: flex; flex-direction: column; gap: 0.25rem; flex: 1;
+    }
+    .cust-kpi-val { font-family: var(--font-serif); font-size: 1.4rem; color: var(--gold); }
+    .cust-kpi-lbl { font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+
+    .cust-bookings-wrap { padding: 1.5rem 2rem; }
+    .cust-bookings-title {
+      font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1rem;
+    }
+    .cust-booking-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto auto auto;
+      gap: 0.6rem 1.2rem;
+      padding: 0.9rem 1rem;
+      background: var(--card); border: 1px solid var(--border);
+      margin-bottom: 1px; align-items: center;
+      font-size: 0.8rem;
+    }
+    .cust-booking-item:hover { border-color: rgba(201,169,110,0.2); }
+    .cb-hotel { font-weight: 500; }
+    .cb-room  { font-size: 0.7rem; color: var(--muted); margin-top: 0.15rem; }
+    .cb-dates { color: var(--muted); font-size: 0.75rem; white-space: nowrap; }
+    .cb-price { font-family: var(--font-serif); color: var(--gold); white-space: nowrap; }
+    .cb-ref   { font-size: 0.68rem; color: var(--muted); }
+
+    .cb-status {
+      display: inline-block; font-size: 0.58rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.2rem 0.6rem; border-radius: 2px; white-space: nowrap;
+    }
+    .s-pending    { background: rgba(240,192,64,0.12);  color: #f0c040; border: 1px solid rgba(240,192,64,0.25); }
+    .s-confirmed  { background: rgba(76,175,125,0.12);  color: var(--green); border: 1px solid rgba(76,175,125,0.25); }
+    .s-cancelled  { background: rgba(224,85,85,0.12);   color: var(--red); border: 1px solid rgba(224,85,85,0.25); }
+    .s-checked_in { background: rgba(91,156,246,0.12);  color: var(--blue); border: 1px solid rgba(91,156,246,0.25); }
+    .s-checked_out{ background: rgba(245,240,234,0.06); color: var(--muted); border: 1px solid var(--border); }
+
+    .cust-no-bookings {
+      text-align: center; padding: 2.5rem; color: var(--muted); font-size: 0.85rem;
+    }
+    .detail-loading {
+      text-align: center; padding: 3rem; color: var(--muted); font-size: 0.85rem;
+    }
+
+    .modal-wide-cust { max-width: 860px; }
+
+    /* Notes save indicator */
+    .notes-saving {
+      font-size: 0.62rem; color: var(--gold); margin-left: 0.4rem;
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .notes-saving.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="adm-header">
+    <a href="../index.html" class="adm-logo">Mường Thanh</a>
+    <nav class="adm-nav">
+      <a href="dashboard.html" class="adm-nav-link">Dashboard</a>
+      <a href="index.html" class="adm-nav-link">Đặt Phòng</a>
+      <a href="customers.html" class="adm-nav-link active">Khách Hàng</a>
+      <a href="hotels.html" class="adm-nav-link">Khách Sạn</a>
+      <a href="staff.html" class="adm-nav-link">Nhân Viên</a>
+      <a href="reviews.html" class="adm-nav-link">Reviews</a>
+      <a href="promotions.html" class="adm-nav-link">Khuyến Mãi</a>
+      <a href="payments.html"  class="adm-nav-link">Thanh Toán</a>
+      <a href="emails.html"    class="adm-nav-link">Email</a>
+      <a href="settings.html"  class="adm-nav-link">Cài Đặt</a>
+    </nav>
+    <span></span>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-val" id="statTotal">—</span>
+      <span class="stat-lbl" data-adm-i18n="cus.stat_total">Tổng khách hàng</span>
+    </div>
+    <div class="stat-card gold">
+      <span class="stat-val" id="statVip">—</span>
+      <span class="stat-lbl" data-adm-i18n="cus.th_vip">VIP</span>
+    </div>
+    <div class="stat-card green">
+      <span class="stat-val" id="statRevenue">—</span>
+      <span class="stat-lbl" data-adm-i18n="cus.stat_revenue">Tổng doanh thu từ khách</span>
+    </div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <div class="filter-group search-group">
+      <label>Tìm kiếm</label>
+      <input type="text" id="fSearch" placeholder="Tên, email, điện thoại..."/>
+    </div>
+    <div class="filter-group">
+      <label>VIP</label>
+      <select id="fVip">
+        <option value="">Tất cả</option>
+        <option value="1">VIP</option>
+        <option value="0">Thường</option>
+      </select>
+    </div>
+    <button class="btn-reset" id="btnReset">Xóa lọc</button>
+  </div>
+
+  <!-- RESULTS INFO -->
+  <div class="results-info">
+    <span id="resultsInfo">Đang tải...</span>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table class="bookings-table" id="customersTable">
+      <thead>
+        <tr>
+          <th data-adm-i18n="cus.th_stt">STT</th>
+          <th data-adm-i18n="cus.th_name">Họ tên</th>
+          <th data-adm-i18n="cus.th_email">Email</th>
+          <th data-adm-i18n="cus.th_phone">Điện thoại</th>
+          <th data-adm-i18n="cus.th_nationality">Quốc tịch</th>
+          <th data-adm-i18n="cus.th_bookings">Tổng đặt</th>
+          <th data-adm-i18n="cus.th_spent">Tổng chi</th>
+          <th data-adm-i18n="cus.th_last_booking">Lần cuối</th>
+          <th data-adm-i18n="cus.th_vip">VIP</th>
+          <th data-adm-i18n="cus.th_notes">Ghi chú</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="10" class="loading-row">Đang tải dữ liệu...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="pagination" id="pagination"></div>
+
+  <!-- MODAL: CUSTOMER DETAIL -->
+  <div class="modal-overlay hidden" id="detailModal">
+    <div class="modal modal-wide-cust">
+      <div class="modal-header">
+        <h2 id="detailModalTitle">Chi Tiết Khách Hàng</h2>
+        <button class="modal-close" id="detailClose">✕</button>
+      </div>
+      <div id="detailContent">
+        <div class="detail-loading">Đang tải...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="customers.js"></script>
+  <script src="admin-auth.js"></script>
+</body>
+</html>

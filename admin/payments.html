@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quản Lý Thanh Toán — Mường Thanh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="admin.css"/>
+  <script src="admin-i18n.js"></script>
+  <style>
+    /* ===== TAB BAR ===== */
+    .tab-bar {
+      background: var(--dark); border-bottom: 1px solid var(--border);
+      display: flex; gap: 0; padding: 0 2rem;
+    }
+    .tab-btn {
+      background: none; border: none; border-bottom: 2px solid transparent;
+      color: var(--muted); font-size: 0.72rem; letter-spacing: 0.14em;
+      text-transform: uppercase; padding: 1rem 1.4rem; cursor: pointer;
+      transition: all 0.2s; font-family: var(--font-sans);
+    }
+    .tab-btn:hover { color: var(--white); }
+    .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ===== PAYMENT TRANSACTION STYLES ===== */
+    .pay-type-badge {
+      display: inline-block; font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.22rem 0.65rem; border-radius: 2px; white-space: nowrap;
+    }
+    .type-deposit    { background: rgba(91,156,246,0.12);  color: var(--blue);   border: 1px solid rgba(91,156,246,0.25); }
+    .type-balance    { background: rgba(201,169,110,0.12); color: var(--gold);   border: 1px solid rgba(201,169,110,0.25); }
+    .type-full       { background: rgba(76,175,125,0.12);  color: var(--green);  border: 1px solid rgba(76,175,125,0.25); }
+    .type-refund     { background: rgba(224,85,85,0.12);   color: var(--red);    border: 1px solid rgba(224,85,85,0.25); }
+    .type-other      { background: rgba(245,240,234,0.05); color: var(--muted);  border: 1px solid var(--border); }
+
+    .pay-status-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .pay-status-badge::before {
+      content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    }
+    .status-paid::before     { background: var(--green); box-shadow: 0 0 5px rgba(76,175,125,0.5); }
+    .status-pending::before  { background: var(--gold); }
+    .status-refunded::before { background: var(--red); }
+    .status-failed::before   { background: var(--muted); }
+    .status-paid     { color: var(--green); }
+    .status-pending  { color: var(--gold); }
+    .status-refunded { color: var(--red); }
+    .status-failed   { color: var(--muted); }
+
+    .pay-method-tag {
+      font-size: 0.65rem; color: var(--muted); background: rgba(245,240,234,0.04);
+      border: 1px solid var(--border); padding: 0.15rem 0.55rem;
+      letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap;
+    }
+    .pay-amount { font-family: var(--font-serif); font-size: 1.05rem; color: var(--white); white-space: nowrap; }
+    .pay-amount.is-refund { color: var(--red); }
+    .ref-code  { font-weight: 500; color: var(--gold); font-size: 0.82rem; }
+    .pay-note  { font-size: 0.72rem; color: var(--muted); max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pay-date  { font-size: 0.75rem; color: var(--muted); }
+
+    .action-btns { display: flex; gap: 0.5rem; white-space: nowrap; }
+    .btn-edit {
+      background: transparent; border: 1px solid var(--border); color: var(--muted);
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.35rem 0.8rem; transition: all 0.2s; cursor: pointer; font-family: var(--font-sans);
+    }
+    .btn-edit:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-del {
+      background: transparent; border: 1px solid var(--border); color: var(--muted);
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.35rem 0.8rem; transition: all 0.2s; cursor: pointer; font-family: var(--font-sans);
+    }
+    .btn-del:hover { border-color: var(--red); color: var(--red); }
+    .btn-mark-paid {
+      background: rgba(76,175,125,0.1); border: 1px solid rgba(76,175,125,0.3); color: var(--green);
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.35rem 0.8rem; transition: all 0.2s; cursor: pointer; font-family: var(--font-sans);
+    }
+    .btn-mark-paid:hover { background: rgba(76,175,125,0.18); }
+
+    /* ===== PAYMENT METHODS PANEL ===== */
+    .pm-panel { padding: 2rem; max-width: 900px; }
+    .pm-intro { font-size: 0.8rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.7; }
+
+    .pm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1px; background: var(--border); }
+
+    .pm-card {
+      background: var(--card); padding: 1.4rem 1.6rem;
+      display: flex; flex-direction: column; gap: 0.6rem;
+      transition: background 0.2s;
+    }
+    .pm-card:hover { background: #1c1c1c; }
+    .pm-card.inactive { opacity: 0.45; }
+
+    .pm-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+    .pm-code { font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.3rem; }
+    .pm-name { font-size: 0.9rem; font-weight: 500; color: var(--white); }
+    .pm-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+
+    .pm-stats { display: flex; gap: 1.2rem; margin-top: 0.4rem; }
+    .pm-stat  { font-size: 0.7rem; color: var(--muted); }
+    .pm-stat strong { color: var(--white); }
+
+    .pm-toggle {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer; user-select: none; white-space: nowrap; flex-shrink: 0;
+    }
+    .toggle-switch {
+      width: 34px; height: 18px; background: var(--border);
+      border-radius: 9px; position: relative; transition: background 0.25s;
+      flex-shrink: 0;
+    }
+    .toggle-switch::after {
+      content: ''; position: absolute; top: 2px; left: 2px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--muted); transition: all 0.25s;
+    }
+    .pm-toggle.on .toggle-switch { background: rgba(76,175,125,0.4); }
+    .pm-toggle.on .toggle-switch::after { left: 18px; background: var(--green); }
+
+    .pm-card-actions { display: flex; gap: 0.5rem; margin-top: 0.2rem; }
+
+    .pm-add-btn {
+      background: var(--card); border: 1px dashed rgba(201,169,110,0.25);
+      padding: 1.4rem 1.6rem; display: flex; align-items: center; justify-content: center;
+      gap: 0.6rem; cursor: pointer; color: rgba(201,169,110,0.45);
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+      transition: all 0.2s; font-family: var(--font-sans);
+    }
+    .pm-add-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,169,110,0.04); }
+
+    /* ===== SHARED MODAL STYLES ===== */
+    .confirm-body { padding: 2rem; }
+    .confirm-body p { color: var(--muted); line-height: 1.7; }
+    .confirm-body strong { color: var(--white); }
+    .btn-danger {
+      background: var(--red); color: var(--white);
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.8rem 1.8rem; border: none; cursor: pointer;
+      transition: background 0.2s; font-family: var(--font-sans);
+    }
+    .btn-danger:hover { background: #c94545; }
+
+    /* stat colors */
+    .stat-card.blue { border-top: 2px solid var(--blue); }
+    .stat-card.blue .stat-val { color: var(--blue); }
+    .stat-card.red  { border-top: 2px solid var(--red); }
+    .stat-card.red  .stat-val { color: var(--red); }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="adm-header">
+    <a href="../index.html" class="adm-logo">Mường Thanh</a>
+    <nav class="adm-nav">
+      <a href="dashboard.html"  class="adm-nav-link">Dashboard</a>
+      <a href="index.html"      class="adm-nav-link">Đặt Phòng</a>
+      <a href="customers.html"  class="adm-nav-link">Khách Hàng</a>
+      <a href="hotels.html"     class="adm-nav-link">Khách Sạn</a>
+      <a href="staff.html"      class="adm-nav-link">Nhân Viên</a>
+      <a href="reviews.html"    class="adm-nav-link">Reviews</a>
+      <a href="promotions.html" class="adm-nav-link">Khuyến Mãi</a>
+      <a href="payments.html"   class="adm-nav-link active">Thanh Toán</a>
+      <a href="emails.html"     class="adm-nav-link">Email</a>
+      <a href="settings.html"  class="adm-nav-link">Cài Đặt</a>
+    </nav>
+    <button class="btn-add-manual" id="btnAddPayment" data-adm-i18n="pay.btn_add">+ Ghi nhận thanh toán</button>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card gold">
+      <span class="stat-val" id="statRevenue">—</span>
+      <span class="stat-lbl" data-adm-i18n="pay.stat_revenue">Doanh thu (đã thanh toán)</span>
+    </div>
+    <div class="stat-card green">
+      <span class="stat-val" id="statPaidCount">—</span>
+      <span class="stat-lbl" data-adm-i18n="pay.stat_paid">Giao dịch thành công</span>
+    </div>
+    <div class="stat-card blue">
+      <span class="stat-val" id="statPendingCount">—</span>
+      <span class="stat-lbl" data-adm-i18n="pay.stat_pending">Chờ thanh toán</span>
+    </div>
+    <div class="stat-card red">
+      <span class="stat-val" id="statRefundCount">—</span>
+      <span class="stat-lbl" data-adm-i18n="pay.stat_refund">Đã hoàn tiền</span>
+    </div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="transactions" data-adm-i18n="pay.tab_transactions">Giao Dịch</button>
+    <button class="tab-btn" data-tab="methods" data-adm-i18n="pay.tab_methods">Phương Thức Thanh Toán</button>
+  </div>
+
+  <!-- ===== TAB 1: TRANSACTIONS ===== -->
+  <div class="tab-panel active" id="tab-transactions">
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label>Trạng thái</label>
+        <select id="fStatus">
+          <option value="">Tất cả</option>
+          <option value="pending">Chờ thanh toán</option>
+          <option value="paid">Đã thanh toán</option>
+          <option value="refunded">Đã hoàn tiền</option>
+          <option value="failed">Thất bại</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Hình thức</label>
+        <select id="fMethod">
+          <option value="">Tất cả</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Loại</label>
+        <select id="fType">
+          <option value="">Tất cả</option>
+          <option value="deposit">Đặt cọc</option>
+          <option value="balance">Thanh toán còn lại</option>
+          <option value="full">Thanh toán toàn bộ</option>
+          <option value="refund">Hoàn tiền</option>
+          <option value="other">Khác</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Từ ngày</label>
+        <input type="date" id="fFrom"/>
+      </div>
+      <div class="filter-group">
+        <label>Đến ngày</label>
+        <input type="date" id="fTo"/>
+      </div>
+      <div class="filter-group search-group">
+        <label>Mã tham chiếu</label>
+        <input type="text" id="fSearch" placeholder="MT-2024-001..."/>
+      </div>
+      <button class="btn-reset" id="btnReset">Xóa lọc</button>
+    </div>
+
+    <!-- RESULTS INFO -->
+    <div class="results-info">
+      <span id="resultsInfo">Đang tải...</span>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-wrap">
+      <table class="bookings-table" id="paymentsTable">
+        <thead>
+          <tr>
+            <th data-adm-i18n="pay.th_ref">Mã tham chiếu</th>
+            <th data-adm-i18n="pay.th_type">Loại</th>
+            <th data-adm-i18n="pay.th_amount">Số tiền</th>
+            <th data-adm-i18n="pay.th_method">Hình thức</th>
+            <th data-adm-i18n="pay.th_status">Trạng thái</th>
+            <th data-adm-i18n="pay.th_created">Ngày tạo</th>
+            <th data-adm-i18n="pay.th_paid_at">Ngày thanh toán</th>
+            <th data-adm-i18n="pay.th_notes">Ghi chú</th>
+            <th data-adm-i18n="pay.th_action">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr><td colspan="9" class="loading-row">Đang tải dữ liệu...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PAGINATION -->
+    <div id="pagination" class="pagination"></div>
+  </div><!-- /tab-transactions -->
+
+  <!-- ===== TAB 2: PAYMENT METHODS ===== -->
+  <div class="tab-panel" id="tab-methods">
+    <div class="pm-panel">
+      <p class="pm-intro">
+        Quản lý các phương thức thanh toán được cung cấp cho khách hàng.<br/>
+        Bật/tắt từng phương thức, chỉnh sửa tên hiển thị, hoặc thêm phương thức mới.
+      </p>
+      <div class="pm-grid" id="pmGrid">
+        <div style="padding:2rem;color:var(--muted);font-size:0.8rem">Đang tải...</div>
+      </div>
+    </div>
+  </div><!-- /tab-methods -->
+
+  <!-- ===== MODAL: ADD / EDIT PAYMENT TRANSACTION ===== -->
+  <div class="modal-overlay hidden" id="payModal">
+    <div class="modal" style="max-width:580px">
+      <div class="modal-header">
+        <h2 id="modalTitle">Ghi Nhận Thanh Toán</h2>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <form class="modal-form" id="payForm" novalidate>
+        <input type="hidden" id="payId"/>
+        <div class="mform-grid">
+          <div class="mfield">
+            <label>Mã tham chiếu <span class="req">*</span></label>
+            <input type="text" id="fRefCode" placeholder="MT-2024-001" required/>
+          </div>
+          <div class="mfield">
+            <label>Mã đặt phòng (ID)</label>
+            <input type="number" id="fBookingId" placeholder="Tùy chọn" min="1"/>
+          </div>
+          <div class="mfield">
+            <label>Loại thanh toán <span class="req">*</span></label>
+            <select id="fPayType" required>
+              <option value="deposit">Đặt cọc</option>
+              <option value="balance">Thanh toán còn lại</option>
+              <option value="full">Thanh toán toàn bộ</option>
+              <option value="refund">Hoàn tiền</option>
+              <option value="other">Khác</option>
+            </select>
+          </div>
+          <div class="mfield">
+            <label>Hình thức <span class="req">*</span></label>
+            <select id="fPayMethod" required>
+              <!-- populated dynamically from payment_methods -->
+            </select>
+          </div>
+          <div class="mfield">
+            <label>Số tiền (VNĐ) <span class="req">*</span></label>
+            <input type="number" id="fAmount" placeholder="2000000" min="1" required/>
+          </div>
+          <div class="mfield">
+            <label>Trạng thái</label>
+            <select id="fPayStatus">
+              <option value="pending">Chờ thanh toán</option>
+              <option value="paid">Đã thanh toán</option>
+              <option value="refunded">Đã hoàn tiền</option>
+              <option value="failed">Thất bại</option>
+            </select>
+          </div>
+          <div class="mfield">
+            <label>Ngày thanh toán</label>
+            <input type="datetime-local" id="fPaidAt"/>
+          </div>
+          <div class="mfield full">
+            <label>Ghi chú</label>
+            <textarea id="fNote" rows="3" placeholder="Ghi chú nội bộ về giao dịch này..."></textarea>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="btnCancel">Hủy</button>
+          <button type="submit" class="btn-save"   id="btnSave">Lưu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: ADD / EDIT PAYMENT METHOD ===== -->
+  <div class="modal-overlay hidden" id="pmModal">
+    <div class="modal" style="max-width:480px">
+      <div class="modal-header">
+        <h2 id="pmModalTitle">Thêm Phương Thức</h2>
+        <button class="modal-close" id="pmModalClose">✕</button>
+      </div>
+      <form class="modal-form" id="pmForm" novalidate>
+        <input type="hidden" id="pmId"/>
+        <div class="mform-grid">
+          <div class="mfield">
+            <label>Mã code <span class="req">*</span></label>
+            <input type="text" id="pmCode" placeholder="vd: zalopay" required/>
+            <span style="font-size:0.65rem;color:var(--muted)">Chữ thường, không dấu, dùng _ thay khoảng trắng</span>
+          </div>
+          <div class="mfield">
+            <label>Trạng thái</label>
+            <select id="pmActive">
+              <option value="1">Đang hoạt động</option>
+              <option value="0">Tắt</option>
+            </select>
+          </div>
+          <div class="mfield full">
+            <label>Tên hiển thị <span class="req">*</span></label>
+            <input type="text" id="pmName" placeholder="vd: ZaloPay" required/>
+          </div>
+          <div class="mfield full">
+            <label>Mô tả</label>
+            <textarea id="pmDesc" rows="2" placeholder="Mô tả ngắn về phương thức thanh toán..."></textarea>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" id="pmCancelBtn">Hủy</button>
+          <button type="submit" class="btn-save"   id="pmSaveBtn">Lưu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: CONFIRM DELETE TRANSACTION ===== -->
+  <div class="modal-overlay hidden" id="deleteModal">
+    <div class="modal" style="max-width:420px">
+      <div class="modal-header">
+        <h2>Xóa Giao Dịch</h2>
+        <button class="modal-close" id="deleteClose">✕</button>
+      </div>
+      <div class="confirm-body">
+        <p>Giao dịch <strong id="deleteRef"></strong> sẽ bị xóa vĩnh viễn.</p>
+        <div class="modal-actions" style="margin-top:1.5rem">
+          <button type="button" class="btn-cancel" id="deleteCancelBtn">Hủy</button>
+          <button type="button" class="btn-danger" id="deleteOkBtn">Xóa vĩnh viễn</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: CONFIRM DELETE METHOD ===== -->
+  <div class="modal-overlay hidden" id="pmDeleteModal">
+    <div class="modal" style="max-width:420px">
+      <div class="modal-header">
+        <h2>Xóa Phương Thức</h2>
+        <button class="modal-close" id="pmDeleteClose">✕</button>
+      </div>
+      <div class="confirm-body">
+        <p>Phương thức <strong id="pmDeleteName"></strong> sẽ bị xóa.<br/>
+           <span style="color:var(--red);font-size:0.78rem">Không thể xóa nếu đang có giao dịch sử dụng.</span></p>
+        <div class="modal-actions" style="margin-top:1.5rem">
+          <button type="button" class="btn-cancel" id="pmDeleteCancelBtn">Hủy</button>
+          <button type="button" class="btn-danger" id="pmDeleteOkBtn">Xóa</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="payments.js"></script>
+  <script src="admin-auth.js"></script>
+</body>
+</html>

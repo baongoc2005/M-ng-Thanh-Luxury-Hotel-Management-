@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Mường Thanh Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="admin.css"/>
+  <link rel="stylesheet" href="dashboard.css"/>
+  <script src="admin-i18n.js"></script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="adm-header">
+    <a href="../index.html" class="adm-logo">Mường Thanh</a>
+    <nav class="adm-nav">
+      <a href="dashboard.html" class="adm-nav-link active">Dashboard</a>
+      <a href="index.html" class="adm-nav-link">Đặt Phòng</a>
+      <a href="customers.html" class="adm-nav-link">Khách Hàng</a>
+      <a href="hotels.html" class="adm-nav-link">Khách Sạn</a>
+      <a href="staff.html" class="adm-nav-link">Nhân Viên</a>
+      <a href="reviews.html" class="adm-nav-link">Reviews</a>
+      <a href="promotions.html" class="adm-nav-link">Khuyến Mãi</a>
+      <a href="payments.html"  class="adm-nav-link">Thanh Toán</a>
+      <a href="emails.html"    class="adm-nav-link">Email</a>
+      <a href="settings.html"  class="adm-nav-link">Cài Đặt</a>
+    </nav>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="dash-main">
+
+    <!-- ROW 1: Primary stats -->
+    <div>
+      <p class="dash-section-title" data-adm-i18n="dash.today">Tổng Quan Hôm Nay</p>
+      <div class="dashboard-grid" id="statsRow1">
+        <div class="dash-card accent-gold">
+          <span class="dash-card-icon">🏨</span>
+          <span class="dash-card-val" id="s-total-bookings">—</span>
+          <span class="dash-card-lbl" data-adm-i18n="dash.total_bookings">Tổng đặt phòng</span>
+          <span class="dash-card-sub" id="s-today-bookings">—</span>
+        </div>
+        <div class="dash-card accent-gold">
+          <span class="dash-card-icon">💰</span>
+          <span class="dash-card-val" id="s-revenue">—</span>
+          <span class="dash-card-lbl" data-adm-i18n="dash.total_revenue">Tổng doanh thu</span>
+          <span class="dash-card-sub" id="s-today-revenue">—</span>
+        </div>
+        <div class="dash-card">
+          <span class="dash-card-icon">👥</span>
+          <span class="dash-card-val" id="s-customers">—</span>
+          <span class="dash-card-lbl" data-adm-i18n="dash.customers">Khách hàng</span>
+          <span class="dash-card-sub" data-adm-i18n="dash.customers_sub">Đã đăng ký</span>
+        </div>
+        <div class="dash-card accent-orange">
+          <span class="dash-card-icon">⏳</span>
+          <span class="dash-card-val" id="s-pending">—</span>
+          <span class="dash-card-lbl" data-adm-i18n="dash.pending">Chờ xác nhận</span>
+          <span class="dash-card-sub" id="s-confirmed">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 2: Secondary stats -->
+    <div>
+      <p class="dash-section-title" data-adm-i18n="dash.system">Hệ Thống</p>
+      <div class="dashboard-grid" id="statsRow2">
+        <div class="dash-card accent-blue">
+          <span class="dash-card-icon">🏩</span>
+          <span class="dash-card-val" id="s-hotels">—</span>
+          <span class="dash-card-lbl" data-adm-i18n="dash.hotels">Khách sạn hoạt động</span>
+          <span class="dash-card-sub"><a href="hotels.html" style="color:var(--blue);opacity:0.8" data-adm-i18n="dash.manage">Quản lý →</a></span>
+        </div>
+        <div class="dash-card">
+          <span class="dash-card-icon">👔</span>
+          <span class="dash-card-val" id="s-staff">—</span>
+          <span class="dash-card-lbl" data-adm-i18n="dash.staff">Nhân viên</span>
+          <span class="dash-card-sub"><a href="staff.html" style="color:var(--muted)" data-adm-i18n="dash.view_list">Xem danh sách →</a></span>
+        </div>
+        <div class="dash-card accent-orange">
+          <span class="dash-card-icon">💬</span>
+          <span class="dash-card-val" id="s-pending-reviews">—</span>
+          <span class="dash-card-lbl" data-adm-i18n="dash.pending_reviews">Review chờ duyệt</span>
+          <span class="dash-card-sub"><a href="reviews.html" style="color:var(--orange);opacity:0.8" data-adm-i18n="dash.approve">Duyệt ngay →</a></span>
+        </div>
+        <div class="dash-card accent-green">
+          <span class="dash-card-icon">🎁</span>
+          <span class="dash-card-val" id="s-promos">—</span>
+          <span class="dash-card-lbl" data-adm-i18n="dash.promos">Khuyến mãi đang chạy</span>
+          <span class="dash-card-sub"><a href="promotions.html" style="color:var(--green);opacity:0.8" data-adm-i18n="dash.manage">Quản lý →</a></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW -->
+    <div class="charts-row">
+      <div class="chart-box">
+        <div>
+          <p class="chart-box-title" data-adm-i18n="dash.chart_revenue_title">Doanh Thu &amp; Đặt Phòng</p>
+          <p class="chart-box-subtitle" data-adm-i18n="dash.chart_revenue_sub">14 ngày gần nhất</p>
+        </div>
+        <div class="chart-canvas-wrap line-wrap">
+          <canvas id="chartRevenue"></canvas>
+        </div>
+      </div>
+      <div class="chart-box">
+        <div>
+          <p class="chart-box-title" data-adm-i18n="dash.chart_source_title">Đặt Phòng Theo Nguồn</p>
+          <p class="chart-box-subtitle" data-adm-i18n="dash.chart_source_sub">Phân bổ kênh đặt phòng</p>
+        </div>
+        <div class="chart-canvas-wrap donut-wrap">
+          <canvas id="chartSource"></canvas>
+        </div>
+        <div class="donut-legend" id="donutLegend"></div>
+      </div>
+    </div>
+
+    <!-- TABLES ROW -->
+    <div class="tables-row">
+      <div class="top-table-box">
+        <div class="top-table-header">
+          <p class="top-table-title" data-adm-i18n="dash.top_hotels">Top Khách Sạn</p>
+          <a href="hotels.html" class="top-table-link" data-adm-i18n="dash.all">Tất cả →</a>
+        </div>
+        <table class="top-table" id="tableTopHotels">
+          <thead>
+            <tr>
+              <th style="width:2.5rem">#</th>
+              <th data-adm-i18n="dash.th_hotel">Khách sạn</th>
+              <th style="text-align:center" data-adm-i18n="dash.th_bookings">Đặt phòng</th>
+              <th data-adm-i18n="dash.th_revenue">Doanh thu</th>
+            </tr>
+          </thead>
+          <tbody id="topHotelsBody">
+            <tr><td colspan="4" class="dash-empty" data-adm-i18n="dash.loading">Đang tải...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="top-table-box">
+        <div class="top-table-header">
+          <p class="top-table-title" data-adm-i18n="dash.recent_bookings">Đặt Phòng Gần Nhất</p>
+          <a href="index.html" class="top-table-link" data-adm-i18n="dash.view_all">Xem tất cả →</a>
+        </div>
+        <table class="top-table" id="tableRecentBookings">
+          <thead>
+            <tr>
+              <th data-adm-i18n="dash.th_customer">Khách hàng</th>
+              <th data-adm-i18n="dash.th_hotel">Khách sạn</th>
+              <th data-adm-i18n="dash.th_source">Nguồn</th>
+              <th data-adm-i18n="dash.th_status">Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody id="recentBookingsBody">
+            <tr><td colspan="4" class="dash-empty" data-adm-i18n="dash.loading">Đang tải...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Status breakdown -->
+    <div>
+      <p class="dash-section-title" data-adm-i18n="dash.status_title">Trạng Thái Đặt Phòng</p>
+      <div class="dashboard-grid" id="statusGrid">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="admin-auth.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

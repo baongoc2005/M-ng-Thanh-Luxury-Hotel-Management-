@@ -1,0 +1,202 @@
+/* ===== HOTELS PAGE ADDITIONS ===== */
+
+/* Wide modal */
+.modal-wide { max-width: 900px; }
+
+/* Section label */
+.section-label {
+  font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold);
+  padding: 1rem 0 0.6rem; border-bottom: 1px solid var(--border); margin-bottom: 1px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+/* Amenities checkboxes */
+.amenities-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1px; background: var(--border); margin-bottom: 1.5rem;
+}
+.amen-item {
+  background: var(--card); padding: 0.7rem 1rem;
+  display: flex; align-items: center; gap: 0.6rem;
+  font-size: 0.78rem; color: var(--muted); cursor: pointer;
+  transition: color 0.2s;
+}
+.amen-item:hover { color: var(--white); }
+.amen-item input[type="checkbox"] { accent-color: var(--gold); width: 14px; height: 14px; }
+.amen-item:has(input:checked) { color: var(--gold); background: rgba(201,169,110,0.06); }
+
+/* Rooms section */
+.rooms-header {
+  display: grid; grid-template-columns: 1fr 130px 110px 120px 40px;
+  gap: 1px; background: var(--border);
+  font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold);
+}
+.rooms-header span { background: var(--dark); padding: 0.5rem 0.8rem; }
+
+.room-row-form {
+  display: grid; grid-template-columns: 1fr 130px 110px 120px 40px;
+  gap: 1px; background: var(--border);
+}
+.room-row-form input, .room-row-form select {
+  background: var(--card); border: none; border-bottom: 1px solid var(--border);
+  color: var(--white); padding: 0.7rem 0.8rem; outline: none; width: 100%;
+  font-size: 0.82rem;
+}
+.room-row-form input::placeholder { color: rgba(245,240,234,0.2); }
+.room-row-form select option { background: var(--dark); }
+.room-row-form .cell { background: var(--card); }
+.btn-del-room {
+  background: var(--card); border: none; color: var(--muted);
+  font-size: 1rem; cursor: pointer; width: 100%; transition: color 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.btn-del-room:hover { color: var(--red); }
+
+/* Button add room */
+.btn-add-room {
+  background: transparent; border: 1px solid var(--border); color: var(--gold);
+  font-size: 0.62rem; letter-spacing: 0.1em; padding: 0.35rem 0.9rem;
+  transition: all 0.2s;
+}
+.btn-add-room:hover { background: rgba(201,169,110,0.08); }
+
+/* ===== GALLERY UPLOAD ===== */
+.gallery-upload-area {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 0.4rem; padding: 0.8rem;
+  border: 1px dashed rgba(201,169,110,0.25);
+  min-height: 90px; align-items: flex-start;
+}
+
+/* Grid chứa thumbnails */
+.gal-grid { display: contents; }
+
+/* Mỗi ảnh thumbnail */
+.gal-item {
+  position: relative; width: 90px; height: 68px;
+  cursor: grab; border: 2px solid var(--border);
+  transition: border-color 0.2s, opacity 0.2s; overflow: hidden; flex-shrink: 0;
+  user-select: none;
+}
+.gal-item:active { cursor: grabbing; }
+.gal-item img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+
+/* Đang kéo */
+.gal-item.dragging { opacity: 0.35; border-style: dashed; }
+
+/* Vị trí thả */
+.gal-item.drag-over { border-color: var(--gold); border-style: dashed; }
+
+/* Ảnh chính — viền vàng */
+.gal-item.is-main { border-color: var(--gold); }
+
+/* Badge "★ Ảnh chính" */
+.gal-badge {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(201,169,110,0.88); color: var(--black);
+  font-size: 0.52rem; font-weight: 700; letter-spacing: 0.06em;
+  text-align: center; padding: 2px 0;
+  opacity: 0; transition: opacity 0.15s; pointer-events: none;
+}
+.gal-item.is-main .gal-badge { opacity: 1; }
+
+/* Nút xóa ảnh */
+.gal-remove {
+  position: absolute; top: 2px; right: 2px;
+  background: rgba(8,8,8,0.75); color: var(--white);
+  font-size: 0.65rem; line-height: 1; padding: 2px 5px;
+  border: none; cursor: pointer; opacity: 0; transition: opacity 0.15s;
+}
+.gal-item:hover .gal-remove { opacity: 1; }
+.gal-remove:hover { background: var(--red); }
+
+/* Nút thêm ảnh (+) */
+.gal-add-btn {
+  width: 90px; height: 68px; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; border: 1px dashed rgba(201,169,110,0.4);
+  cursor: pointer; transition: border-color 0.2s; color: var(--muted);
+}
+.gal-add-btn:hover { border-color: var(--gold); color: var(--gold); }
+.gal-add-icon { font-size: 1.4rem; line-height: 1; color: inherit; }
+.gal-add-btn span:not(.gal-add-icon):not(.upload-hint) { font-size: 0.65rem; }
+.upload-hint { font-size: 0.55rem; color: var(--muted); text-align: center; }
+
+.gal-hint { font-size: 0.62rem; color: var(--muted); margin-top: 0.5rem; }
+.upload-status { font-size: 0.72rem; margin-top: 0.4rem; }
+.upload-status.hidden { display: none; }
+.upload-status.uploading { color: var(--muted); }
+.upload-status.ok  { color: #4caf7d; }
+.upload-status.err { color: var(--red); }
+
+/* Hotel table — thumbnail */
+.hotel-thumb {
+  width: 60px; height: 40px; object-fit: cover;
+  opacity: 0.85; border: 1px solid var(--border);
+}
+
+/* Brand badge */
+.brand-badge {
+  display: inline-block; font-size: 0.58rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.2rem 0.6rem; border-radius: 2px;
+}
+.brand-luxury   { background: rgba(201,169,110,0.15); color: var(--gold); }
+.brand-grand    { background: rgba(91,156,246,0.15);  color: #5b9cf6; }
+.brand-holiday  { background: rgba(76,175,125,0.15);  color: #4caf7d; }
+.brand-muongthanh { background: rgba(240,146,74,0.12); color: #f0924a; }
+
+/* Stars */
+.stars-cell { color: var(--gold); font-size: 0.78rem; letter-spacing: -1px; }
+
+/* Status pill */
+.status-pill {
+  display: inline-block; font-size: 0.6rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.7rem;
+  border-radius: 2px;
+}
+.status-active   { background: rgba(76,175,125,0.15); color: #4caf7d; }
+.status-inactive { background: rgba(255,255,255,0.05); color: var(--muted); }
+
+/* Action buttons */
+.action-btns { display: flex; gap: 0.4rem; }
+.btn-edit {
+  background: transparent; border: 1px solid var(--border); color: var(--muted);
+  font-size: 0.65rem; letter-spacing: 0.08em; padding: 0.35rem 0.8rem;
+  transition: all 0.2s; cursor: pointer; white-space: nowrap;
+}
+.btn-edit:hover { border-color: var(--gold); color: var(--gold); }
+.btn-hide {
+  background: transparent; border: 1px solid var(--border); color: var(--muted);
+  font-size: 0.65rem; letter-spacing: 0.08em; padding: 0.35rem 0.8rem;
+  transition: all 0.2s; cursor: pointer; white-space: nowrap;
+}
+.btn-hide:hover { border-color: var(--red); color: var(--red); }
+.btn-restore {
+  background: transparent; border: 1px solid rgba(76,175,125,0.3); color: #4caf7d;
+  font-size: 0.65rem; letter-spacing: 0.08em; padding: 0.35rem 0.8rem;
+  transition: all 0.2s; cursor: pointer; white-space: nowrap;
+}
+.btn-restore:hover { background: rgba(76,175,125,0.1); }
+
+/* Delete confirm button */
+.btn-delete-confirm {
+  background: var(--red); color: var(--white);
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.8rem 2rem; border: none; cursor: pointer; transition: opacity 0.2s;
+}
+.btn-delete-confirm:hover { opacity: 0.85; }
+
+/* Rooms inline table in edit modal */
+.rooms-existing {
+  margin-bottom: 1px; border-top: 1px solid var(--border);
+}
+
+@media (max-width: 900px) {
+  .rooms-header,
+  .room-row-form { grid-template-columns: 1fr 100px 80px 90px 36px; }
+  .bookings-table th:nth-child(1),
+  .bookings-table td:nth-child(1),
+  .bookings-table th:nth-child(7),
+  .bookings-table td:nth-child(7) { display: none; }
+}

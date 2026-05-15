@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Email — Mường Thanh</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="admin.css"/>
+  <style>
+    .email-layout { display:grid; grid-template-columns:420px 1fr; gap:0; height:calc(100vh - 56px); }
+
+    /* LEFT PANEL */
+    .email-left { border-right:1px solid var(--border,#e5e7eb); overflow-y:auto; background:#fff; display:flex; flex-direction:column; }
+    .email-left-head { padding:1rem 1.25rem; border-bottom:1px solid var(--border,#e5e7eb); display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; }
+    .tpl-select { flex:1; min-width:160px; padding:0.4rem 0.6rem; border:1px solid #d1d5db; border-radius:4px; font-size:0.8rem; }
+    .subject-row { padding:0.75rem 1.25rem; border-bottom:1px solid var(--border,#e5e7eb); display:flex; align-items:center; gap:0.5rem; }
+    .subject-row label { font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:#6b7280; white-space:nowrap; }
+    .subject-input { flex:1; padding:0.4rem 0.6rem; border:1px solid #d1d5db; border-radius:4px; font-size:0.85rem; }
+
+    /* BLOCKS LIST */
+    .blocks-list { flex:1; padding:0.75rem; overflow-y:auto; }
+    .block-item { border:1px solid #e5e7eb; border-radius:6px; margin-bottom:0.5rem; background:#f9fafb; cursor:pointer; transition:border-color .2s, box-shadow .2s; }
+    .block-item:hover { border-color:#c9a96e; }
+    .block-item.selected { border-color:#c9a96e; box-shadow:0 0 0 2px rgba(201,169,110,.2); background:#fffdf8; }
+    .block-item-head { display:flex; align-items:center; gap:0.5rem; padding:0.55rem 0.75rem; }
+    .block-type-badge { font-size:0.65rem; font-weight:600; text-transform:uppercase; letter-spacing:.08em; padding:2px 7px; border-radius:3px; background:#e5e7eb; color:#374151; }
+    .block-type-badge.header { background:#fef3c7; color:#92400e; }
+    .block-type-badge.text   { background:#dbeafe; color:#1e40af; }
+    .block-type-badge.button { background:#d1fae5; color:#065f46; }
+    .block-type-badge.divider{ background:#f3f4f6; color:#6b7280; }
+    .block-type-badge.highlight{ background:#ede9fe; color:#5b21b6; }
+    .block-type-badge.footer { background:#fee2e2; color:#991b1b; }
+    .block-preview { font-size:0.75rem; color:#6b7280; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .block-actions { display:flex; gap:2px; margin-left:auto; }
+    .block-btn { background:none; border:none; cursor:pointer; padding:4px 6px; border-radius:3px; color:#9ca3af; font-size:0.8rem; line-height:1; transition:background .15s, color .15s; }
+    .block-btn:hover { background:#e5e7eb; color:#374151; }
+    .block-btn.del:hover { background:#fee2e2; color:#dc2626; }
+
+    /* BLOCK EDITOR */
+    .block-editor { border-top:2px solid #c9a96e; background:#fff; padding:1rem 1.25rem; }
+    .block-editor h4 { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:#c9a96e; margin-bottom:.75rem; }
+    .be-field { margin-bottom:.65rem; }
+    .be-field label { display:block; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:#6b7280; margin-bottom:.3rem; }
+    .be-field input, .be-field textarea, .be-field select {
+      width:100%; padding:.4rem .6rem; border:1px solid #d1d5db; border-radius:4px; font-size:.85rem; font-family:inherit;
+    }
+    .be-field textarea { min-height:80px; resize:vertical; }
+    .be-rows { border:1px solid #e5e7eb; border-radius:4px; overflow:hidden; margin-bottom:.5rem; }
+    .be-row { display:grid; grid-template-columns:1fr 1fr 32px; gap:4px; padding:4px 6px; border-bottom:1px solid #f3f4f6; align-items:center; }
+    .be-row:last-child { border-bottom:none; }
+    .be-row input { padding:3px 5px; border:1px solid #e5e7eb; border-radius:3px; font-size:.8rem; }
+    .be-row-del { background:none; border:none; cursor:pointer; color:#dc2626; font-size:.85rem; }
+    .be-add-row { font-size:.75rem; color:#6b7280; cursor:pointer; padding:.3rem .6rem; background:none; border:none; text-decoration:underline; }
+
+    /* ADD BLOCK */
+    .add-block-bar { padding:.6rem 1.25rem; border-top:1px solid #e5e7eb; display:flex; gap:.4rem; flex-wrap:wrap; }
+    .btn-add-block { font-size:.7rem; font-weight:600; padding:.3rem .7rem; border:1px solid #d1d5db; border-radius:4px; cursor:pointer; background:#f9fafb; color:#374151; transition:background .15s; text-transform:uppercase; letter-spacing:.05em; }
+    .btn-add-block:hover { background:#c9a96e; border-color:#c9a96e; color:#fff; }
+
+    /* ACTION BAR */
+    .email-action-bar { padding:.75rem 1.25rem; border-top:1px solid #e5e7eb; display:flex; gap:.5rem; align-items:center; }
+    .btn-save-tpl { background:#c9a96e; color:#fff; border:none; padding:.5rem 1.2rem; font-size:.8rem; font-weight:600; border-radius:4px; cursor:pointer; letter-spacing:.05em; }
+    .btn-save-tpl:hover { background:#b8935a; }
+    .test-email-wrap { display:flex; gap:.4rem; flex:1; justify-content:flex-end; }
+    .test-email-input { width:180px; padding:.4rem .6rem; border:1px solid #d1d5db; border-radius:4px; font-size:.8rem; }
+    .btn-test { background:#374151; color:#fff; border:none; padding:.4rem .9rem; font-size:.75rem; font-weight:600; border-radius:4px; cursor:pointer; }
+    .btn-test:hover { background:#1f2937; }
+
+    /* RIGHT PANEL — PREVIEW */
+    .email-right { background:#f3f4f6; display:flex; flex-direction:column; }
+    .preview-head { padding:.6rem 1rem; border-bottom:1px solid #e5e7eb; background:#fff; font-size:.75rem; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.08em; display:flex; align-items:center; justify-content:space-between; }
+    .preview-frame { flex:1; border:none; background:#fff; }
+
+    /* Toast */
+    .email-toast { position:fixed; bottom:1.5rem; right:1.5rem; background:#1f2937; color:#fff; padding:.6rem 1.2rem; border-radius:6px; font-size:.8rem; z-index:999; transition:opacity .3s; }
+    .email-toast.hidden { opacity:0; pointer-events:none; }
+
+    @media (max-width:900px) {
+      .email-layout { grid-template-columns:1fr; height:auto; }
+      .email-right { height:50vh; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="adm-header">
+    <a href="../index.html" class="adm-logo">Mường Thanh</a>
+    <nav class="adm-nav">
+      <a href="dashboard.html"  class="adm-nav-link">Dashboard</a>
+      <a href="index.html"      class="adm-nav-link">Đặt Phòng</a>
+      <a href="customers.html"  class="adm-nav-link">Khách Hàng</a>
+      <a href="hotels.html"     class="adm-nav-link">Khách Sạn</a>
+      <a href="staff.html"      class="adm-nav-link">Nhân Viên</a>
+      <a href="reviews.html"    class="adm-nav-link">Reviews</a>
+      <a href="promotions.html" class="adm-nav-link">Khuyến Mãi</a>
+      <a href="payments.html"   class="adm-nav-link">Thanh Toán</a>
+      <a href="emails.html"     class="adm-nav-link active">Email</a>
+      <a href="settings.html"   class="adm-nav-link">Cài Đặt</a>
+    </nav>
+  </header>
+
+  <div class="email-layout">
+
+    <!-- LEFT: EDITOR -->
+    <div class="email-left">
+      <div class="email-left-head">
+        <select class="tpl-select" id="tplSelect" onchange="loadTemplate(this.value)">
+          <option value="">— Chọn template —</option>
+        </select>
+        <select class="tpl-select" id="activeSelect" style="max-width:110px;" onchange="setActive(this.value)">
+          <option value="1">● Bật</option>
+          <option value="0">○ Tắt</option>
+        </select>
+      </div>
+
+      <div class="subject-row">
+        <label>Tiêu đề</label>
+        <input class="subject-input" id="subjectInput" type="text" placeholder="Subject email..."/>
+      </div>
+
+      <div class="blocks-list" id="blocksList"></div>
+
+      <!-- BLOCK EDITOR (shown when block selected) -->
+      <div class="block-editor" id="blockEditor" style="display:none;"></div>
+
+      <div class="add-block-bar">
+        <span style="font-size:.7rem;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:.05em;align-self:center;">Thêm:</span>
+        <button class="btn-add-block" onclick="addBlock('header')">Header</button>
+        <button class="btn-add-block" onclick="addBlock('text')">Text</button>
+        <button class="btn-add-block" onclick="addBlock('button')">Button</button>
+        <button class="btn-add-block" onclick="addBlock('highlight')">Box</button>
+        <button class="btn-add-block" onclick="addBlock('divider')">---</button>
+        <button class="btn-add-block" onclick="addBlock('footer')">Footer</button>
+      </div>
+
+      <div class="email-action-bar">
+        <button class="btn-save-tpl" onclick="saveTemplate()">Lưu template</button>
+        <div class="test-email-wrap">
+          <input class="test-email-input" id="testEmail" type="email" placeholder="email@test.com"/>
+          <button class="btn-test" onclick="sendTest()">Gửi thử</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: PREVIEW -->
+    <div class="email-right">
+      <div class="preview-head">
+        <span>Xem trước email</span>
+        <span id="previewSubject" style="color:#374151;text-transform:none;letter-spacing:0;font-weight:400;"></span>
+      </div>
+      <iframe class="preview-frame" id="previewFrame"></iframe>
+    </div>
+  </div>
+
+  <div class="email-toast hidden" id="toast"></div>
+
+  <script>
+  let templates = [];
+  let currentCode = '';
+  let blocks = [];
+  let selectedIdx = -1;
+
+  const BLOCK_DEFAULTS = {
+    header:    { type:'header',    logo:'Mường Thanh', title:'Tiêu đề email', subtitle:'' },
+    text:      { type:'text',      content:'Nội dung đoạn văn...' },
+    button:    { type:'button',    text:'Xem ngay', url:'https://muongthanh.online', color:'#c9a96e' },
+    divider:   { type:'divider' },
+    highlight: { type:'highlight', title:'Thông tin', rows:[{label:'Mục 1', value:'Giá trị 1'}] },
+    footer:    { type:'footer',    content:'© 2026 Mường Thanh.\nChuỗi khách sạn tư nhân lớn nhất Đông Dương.' },
+  };
+
+  // ===== INIT =====
+  async function init() {
+    const res  = await fetch('../api/emails.php');
+    const data = await res.json();
+    templates  = data.templates || [];
+    const sel  = document.getElementById('tplSelect');
+    templates.forEach(t => {
+      const o = document.createElement('option');
+      o.value = t.code; o.textContent = t.name;
+      sel.appendChild(o);
+    });
+    if (templates.length) loadTemplate(templates[0].code);
+  }
+
+  async function loadTemplate(code) {
+    if (!code) return;
+    currentCode = code;
+    document.getElementById('tplSelect').value = code;
+    const res  = await fetch('../api/emails.php?code=' + code);
+    const data = await res.json();
+    const tpl  = data.template;
+    blocks     = tpl.blocks || [];
+    selectedIdx = -1;
+    document.getElementById('subjectInput').value = tpl.subject || '';
+    document.getElementById('activeSelect').value = tpl.is_active ? '1' : '0';
+    renderBlockList();
+    refreshPreview();
+  }
+
+  // ===== RENDER BLOCK LIST =====
+  function renderBlockList() {
+    const list = document.getElementById('blocksList');
+    if (!blocks.length) {
+      list.innerHTML = '<p style="text-align:center;color:#9ca3af;font-size:.8rem;padding:2rem;">Chưa có block nào. Thêm block bên dưới.</p>';
+      return;
+    }
+    list.innerHTML = blocks.map((b, i) => `
+      <div class="block-item ${selectedIdx === i ? 'selected' : ''}" onclick="selectBlock(${i})">
+        <div class="block-item-head">
+          <span class="block-type-badge ${b.type}">${b.type}</span>
+          <span class="block-preview">${blockPreviewText(b)}</span>
+          <div class="block-actions">
+            <button class="block-btn" onclick="moveBlock(${i},-1,event)" title="Lên">↑</button>
+            <button class="block-btn" onclick="moveBlock(${i},1,event)" title="Xuống">↓</button>
+            <button class="block-btn del" onclick="deleteBlock(${i},event)" title="Xóa">✕</button>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  function blockPreviewText(b) {
+    if (b.type === 'header')    return b.title || b.logo || '';
+    if (b.type === 'text')      return (b.content || '').substring(0, 60);
+    if (b.type === 'button')    return b.text || '';
+    if (b.type === 'highlight') return b.title || '';
+    if (b.type === 'footer')    return (b.content || '').substring(0, 60);
+    if (b.type === 'divider')   return '— — — — — — —';
+    return '';
+  }
+
+  // ===== BLOCK SELECTION & EDITOR =====
+  function selectBlock(i) {
+    selectedIdx = i;
+    renderBlockList();
+    renderEditor(blocks[i]);
+  }
+
+  function renderEditor(b) {
+    const ed = document.getElementById('blockEditor');
+    ed.style.display = 'block';
+    const type = b.type;
+
+    let html = `<h4>Chỉnh sửa — ${type}</h4>`;
+
+    if (type === 'header') {
+      html += field('Logo text', 'text', 'logo', b.logo)
+            + field('Tiêu đề', 'text', 'title', b.title)
+            + field('Phụ đề', 'text', 'subtitle', b.subtitle);
+    } else if (type === 'text') {
+      html += fieldArea('Nội dung', 'content', b.content);
+    } else if (type === 'button') {
+      html += field('Nội dung nút', 'text', 'text', b.text)
+            + field('Đường dẫn (URL)', 'text', 'url', b.url)
+            + field('Màu nút', 'color', 'color', b.color || '#c9a96e');
+    } else if (type === 'highlight') {
+      html += field('Tiêu đề box', 'text', 'title', b.title);
+      html += '<div class="be-field"><label>Các dòng</label><div class="be-rows" id="beRows">';
+      (b.rows || []).forEach((r, ri) => {
+        html += `<div class="be-row">
+          <input placeholder="Nhãn" value="${esc(r.label)}" oninput="updateRow(${ri},'label',this.value)"/>
+          <input placeholder="Giá trị" value="${esc(r.value)}" oninput="updateRow(${ri},'value',this.value)"/>
+          <button class="be-row-del" onclick="deleteRow(${ri})">✕</button>
+        </div>`;
+      });
+      html += '</div><button class="be-add-row" onclick="addRow()">+ Thêm dòng</button></div>';
+    } else if (type === 'footer') {
+      html += fieldArea('Nội dung', 'content', b.content);
+    } else if (type === 'divider') {
+      html += '<p style="font-size:.8rem;color:#9ca3af;">Đường kẻ ngang, không có thuộc tính.</p>';
+    }
+
+    ed.innerHTML = html;
+
+    // Bind live inputs
+    ed.querySelectorAll('input[data-field], textarea[data-field]').forEach(el => {
+      el.addEventListener('input', () => {
+        blocks[selectedIdx][el.dataset.field] = el.value;
+        renderBlockList();
+        refreshPreview();
+      });
+    });
+  }
+
+  function field(label, type, key, val = '') {
+    return `<div class="be-field">
+      <label>${label}</label>
+      <input type="${type}" data-field="${key}" value="${esc(val||'')}"/>
+    </div>`;
+  }
+  function fieldArea(label, key, val = '') {
+    return `<div class="be-field">
+      <label>${label}</label>
+      <textarea data-field="${key}">${esc(val||'')}</textarea>
+    </div>`;
+  }
+  function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+  function updateRow(ri, key, val) {
+    if (!blocks[selectedIdx].rows) blocks[selectedIdx].rows = [];
+    blocks[selectedIdx].rows[ri][key] = val;
+    refreshPreview();
+  }
+  function deleteRow(ri) {
+    blocks[selectedIdx].rows.splice(ri, 1);
+    renderEditor(blocks[selectedIdx]);
+    refreshPreview();
+  }
+  function addRow() {
+    if (!blocks[selectedIdx].rows) blocks[selectedIdx].rows = [];
+    blocks[selectedIdx].rows.push({ label: 'Nhãn', value: 'Giá trị' });
+    renderEditor(blocks[selectedIdx]);
+    refreshPreview();
+  }
+
+  // ===== BLOCK ACTIONS =====
+  function addBlock(type) {
+    blocks.push(JSON.parse(JSON.stringify(BLOCK_DEFAULTS[type])));
+    selectedIdx = blocks.length - 1;
+    renderBlockList();
+    renderEditor(blocks[selectedIdx]);
+    refreshPreview();
+  }
+
+  function moveBlock(i, dir, e) {
+    e.stopPropagation();
+    const j = i + dir;
+    if (j < 0 || j >= blocks.length) return;
+    [blocks[i], blocks[j]] = [blocks[j], blocks[i]];
+    if (selectedIdx === i) selectedIdx = j;
+    renderBlockList();
+    refreshPreview();
+  }
+
+  function deleteBlock(i, e) {
+    e.stopPropagation();
+    blocks.splice(i, 1);
+    selectedIdx = -1;
+    document.getElementById('blockEditor').style.display = 'none';
+    renderBlockList();
+    refreshPreview();
+  }
+
+  // ===== PREVIEW =====
+  function refreshPreview() {
+    document.getElementById('previewSubject').textContent = document.getElementById('subjectInput').value;
+    fetch('../api/emails.php?action=preview&code=' + currentCode)
+      .then(() => {});
+    // Build preview from current blocks in memory
+    const html = buildPreviewHtml();
+    const frame = document.getElementById('previewFrame');
+    frame.srcdoc = html;
+  }
+
+  function buildPreviewHtml() {
+    const rows = blocks.map(b => `<tr><td>${renderBlockJs(b)}</td></tr>`).join('');
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#080808;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#080808;">
+<tr><td align="center" style="padding:24px 8px;">
+<table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+${rows}</table></td></tr></table>
+</body></html>`;
+  }
+
+  function renderBlockJs(b) {
+    const e = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const nl = s => e(s||'').replace(/\n/g,'<br>');
+    const t = b.type;
+    if (t === 'header') return `<table width="100%" cellpadding="0" cellspacing="0" style="background:#0f0f0f;"><tr><td style="padding:36px 36px 28px;text-align:center;">
+      <div style="font-family:Georgia,serif;font-size:22px;font-weight:300;letter-spacing:8px;color:#c9a96e;text-transform:uppercase;">${e(b.logo||'Mường Thanh')}</div>
+      ${b.title ? `<div style="font-family:Arial,sans-serif;font-size:19px;font-weight:300;color:#f5f0ea;margin-top:16px;line-height:1.4;">${e(b.title)}</div>` : ''}
+      ${b.subtitle ? `<div style="font-family:Arial,sans-serif;font-size:12px;color:rgba(245,240,234,0.5);margin-top:7px;">${e(b.subtitle)}</div>` : ''}
+    </td></tr></table>`;
+    if (t === 'text') return `<table width="100%" cellpadding="0" cellspacing="0" style="background:#161616;"><tr><td style="padding:24px 36px;font-family:Arial,sans-serif;font-size:15px;line-height:1.8;color:rgba(245,240,234,0.85);">${nl(b.content)}</td></tr></table>`;
+    if (t === 'button') return `<table width="100%" cellpadding="0" cellspacing="0" style="background:#161616;"><tr><td style="padding:14px 36px 32px;text-align:center;"><a href="${e(b.url||'#')}" style="display:inline-block;background:${e(b.color||'#c9a96e')};color:#080808;font-family:Arial,sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:13px 40px;">${e(b.text||'Xem ngay')}</a></td></tr></table>`;
+    if (t === 'divider') return `<table width="100%" cellpadding="0" cellspacing="0" style="background:#161616;"><tr><td style="padding:6px 36px;"><div style="height:1px;background:rgba(255,255,255,0.08);"></div></td></tr></table>`;
+    if (t === 'highlight') {
+      const rowsHtml = (b.rows||[]).map(r=>`<tr><td style="padding:5px 0;font-family:Arial,sans-serif;font-size:13px;color:rgba(245,240,234,0.5);width:45%;vertical-align:top;">${e(r.label)}</td><td style="padding:5px 0;font-family:Arial,sans-serif;font-size:13px;color:#f5f0ea;font-weight:600;">${e(r.value)}</td></tr>`).join('');
+      return `<table width="100%" cellpadding="0" cellspacing="0" style="background:#161616;"><tr><td style="padding:8px 36px 24px;"><table width="100%" cellpadding="14" cellspacing="0" style="border:1px solid rgba(201,169,110,0.25);background:rgba(201,169,110,0.06);">${b.title?`<tr><td colspan="2" style="padding-bottom:10px;font-family:Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#c9a96e;">${e(b.title)}</td></tr>`:''}${rowsHtml}</table></td></tr></table>`;
+    }
+    if (t === 'footer') return `<table width="100%" cellpadding="0" cellspacing="0" style="background:#0f0f0f;"><tr><td style="padding:24px 36px;font-family:Arial,sans-serif;font-size:12px;line-height:1.7;color:rgba(245,240,234,0.3);text-align:center;">${nl(b.content)}</td></tr></table>`;
+    return '';
+  }
+
+  // ===== SAVE =====
+  async function saveTemplate() {
+    if (!currentCode) return;
+    await fetch('../api/emails.php?code=' + currentCode, {
+      method: 'PUT',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        subject:   document.getElementById('subjectInput').value,
+        is_active: parseInt(document.getElementById('activeSelect').value),
+        blocks
+      })
+    });
+    showToast('Đã lưu template ✓');
+  }
+
+  async function setActive(val) {
+    if (!currentCode) return;
+    await fetch('../api/emails.php?code=' + currentCode, {
+      method:'PUT', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({is_active: parseInt(val)})
+    });
+  }
+
+  // ===== SEND TEST =====
+  async function sendTest() {
+    const email = document.getElementById('testEmail').value.trim();
+    if (!email) { showToast('Nhập email thử nghiệm'); return; }
+    // Save first
+    await saveTemplate();
+    const res  = await fetch('../api/emails.php?action=send_test', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({code: currentCode, email})
+    });
+    const data = await res.json();
+    showToast(data.message || (data.success ? 'Đã gửi ✓' : 'Gửi thất bại'));
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.remove('hidden');
+    setTimeout(() => t.classList.add('hidden'), 3000);
+  }
+
+  init();
+  </script>
+  <script src="admin-auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quản Lý Reviews — Mường Thanh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="admin.css"/>
+  <script src="admin-i18n.js"></script>
+  <style>
+    /* ===== REVIEWS PAGE ===== */
+
+    /* Star display */
+    .stars-display { font-size: 0.9rem; letter-spacing: 1px; white-space: nowrap; }
+    .star-filled { color: var(--gold); }
+    .star-empty  { color: rgba(245,240,234,0.18); }
+
+    /* Rating number badge */
+    .rating-num {
+      display: inline-block; background: rgba(201,169,110,0.15);
+      color: var(--gold); font-size: 0.72rem; font-weight: 600;
+      padding: 0.2rem 0.55rem; border-radius: 2px; margin-left: 0.4rem;
+      vertical-align: middle;
+    }
+
+    /* Review status badges */
+    .badge-status {
+      display: inline-block; font-size: 0.58rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.7rem;
+      border-radius: 2px; white-space: nowrap;
+    }
+    .badge-pending  { background: rgba(240,146,74,0.15); color: var(--orange); border: 1px solid rgba(240,146,74,0.3); }
+    .badge-approved { background: rgba(76,175,125,0.15);  color: var(--green);  border: 1px solid rgba(76,175,125,0.3); }
+    .badge-rejected { background: rgba(224,85,85,0.15);   color: var(--red);    border: 1px solid rgba(224,85,85,0.3); }
+
+    /* Comment truncate */
+    .comment-cell {
+      max-width: 220px; overflow: hidden; text-overflow: ellipsis;
+      white-space: nowrap; font-size: 0.78rem; color: var(--muted);
+    }
+    .review-title { font-weight: 500; font-size: 0.82rem; color: var(--white); }
+
+    /* Action buttons for reviews */
+    .action-btns { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .btn-approve {
+      background: transparent; border: 1px solid rgba(76,175,125,0.4); color: var(--green);
+      font-size: 0.62rem; letter-spacing: 0.07em; padding: 0.3rem 0.7rem;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .btn-approve:hover { background: rgba(76,175,125,0.12); }
+    .btn-reject {
+      background: transparent; border: 1px solid rgba(224,85,85,0.4); color: var(--red);
+      font-size: 0.62rem; letter-spacing: 0.07em; padding: 0.3rem 0.7rem;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .btn-reject:hover { background: rgba(224,85,85,0.1); }
+    .btn-reply {
+      background: transparent; border: 1px solid rgba(91,156,246,0.4); color: var(--blue);
+      font-size: 0.62rem; letter-spacing: 0.07em; padding: 0.3rem 0.7rem;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .btn-reply:hover { background: rgba(91,156,246,0.1); }
+    .btn-del-review {
+      background: transparent; border: 1px solid var(--border); color: var(--muted);
+      font-size: 0.62rem; letter-spacing: 0.07em; padding: 0.3rem 0.7rem;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .btn-del-review:hover { border-color: var(--red); color: var(--red); }
+
+    /* Reply modal extras */
+    .review-detail-card {
+      background: var(--black); border: 1px solid var(--border);
+      padding: 1.2rem 1.5rem; margin-bottom: 1.5rem;
+    }
+    .rdc-hotel { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+    .rdc-customer { font-size: 0.82rem; font-weight: 500; color: var(--white); }
+    .rdc-meta { font-size: 0.7rem; color: var(--muted); margin-top: 0.15rem; margin-bottom: 0.8rem; }
+    .rdc-title { font-family: var(--font-serif); font-size: 1.1rem; font-weight: 400; color: var(--white); margin-bottom: 0.5rem; }
+    .rdc-comment { font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
+    .rdc-existing-reply {
+      background: rgba(201,169,110,0.06); border-left: 2px solid var(--gold);
+      padding: 0.7rem 1rem; margin-top: 0.8rem; font-size: 0.78rem; color: var(--muted);
+    }
+    .rdc-existing-reply strong { display: block; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.3rem; }
+
+    /* Reply textarea */
+    .reply-textarea {
+      width: 100%; background: var(--card); border: 1px solid var(--border);
+      color: var(--white); padding: 0.9rem 1rem; resize: vertical;
+      outline: none; font-family: var(--font-sans); font-size: 0.85rem;
+      line-height: 1.6; min-height: 110px;
+      transition: border-color 0.2s;
+    }
+    .reply-textarea:focus { border-color: rgba(201,169,110,0.4); }
+    .reply-textarea::placeholder { color: rgba(245,240,234,0.2); }
+    .reply-label {
+      font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.5rem; display: block;
+    }
+
+    /* Stat card variants for reviews */
+    .stat-card.orange .stat-val { color: var(--orange); }
+    .stat-card.orange { border-top: 2px solid var(--orange); }
+    .stat-card.blue .stat-val { color: var(--blue); }
+    .stat-card.blue { border-top: 2px solid var(--blue); }
+    .stat-card.red .stat-val { color: var(--red); }
+    .stat-card.red { border-top: 2px solid var(--red); }
+
+    /* Has-reply indicator */
+    .has-reply-dot {
+      display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--blue); margin-left: 0.4rem; vertical-align: middle;
+      title: 'Đã có phản hồi';
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="adm-header">
+    <a href="../index.html" class="adm-logo">Mường Thanh</a>
+    <nav class="adm-nav">
+      <a href="dashboard.html" class="adm-nav-link">Dashboard</a>
+      <a href="index.html" class="adm-nav-link">Đặt Phòng</a>
+      <a href="customers.html" class="adm-nav-link">Khách Hàng</a>
+      <a href="hotels.html" class="adm-nav-link">Khách Sạn</a>
+      <a href="staff.html" class="adm-nav-link">Nhân Viên</a>
+      <a href="reviews.html" class="adm-nav-link active">Reviews</a>
+      <a href="promotions.html" class="adm-nav-link">Khuyến Mãi</a>
+      <a href="payments.html"  class="adm-nav-link">Thanh Toán</a>
+      <a href="emails.html"    class="adm-nav-link">Email</a>
+      <a href="settings.html"  class="adm-nav-link">Cài Đặt</a>
+    </nav>
+    <span></span>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-val" id="statTotal">—</span>
+      <span class="stat-lbl" data-adm-i18n="rv.stat_total">Tổng reviews</span>
+    </div>
+    <div class="stat-card orange">
+      <span class="stat-val" id="statPending">—</span>
+      <span class="stat-lbl" data-adm-i18n="rv.stat_pending">Chờ duyệt</span>
+    </div>
+    <div class="stat-card green">
+      <span class="stat-val" id="statApproved">—</span>
+      <span class="stat-lbl" data-adm-i18n="rv.stat_approved">Đã duyệt</span>
+    </div>
+    <div class="stat-card red">
+      <span class="stat-val" id="statRejected">—</span>
+      <span class="stat-lbl" data-adm-i18n="rv.stat_rejected">Đã từ chối</span>
+    </div>
+    <div class="stat-card gold">
+      <span class="stat-val" id="statAvgRating">—</span>
+      <span class="stat-lbl" data-adm-i18n="rv.stat_avg">Điểm TB</span>
+    </div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label>Khách sạn</label>
+      <select id="fHotel">
+        <option value="">Tất cả khách sạn</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Trạng thái</label>
+      <select id="fStatus">
+        <option value="">Tất cả</option>
+        <option value="pending">Chờ duyệt</option>
+        <option value="approved">Đã duyệt</option>
+        <option value="rejected">Đã từ chối</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Xếp hạng sao</label>
+      <select id="fRating">
+        <option value="">Tất cả</option>
+        <option value="5">5 sao</option>
+        <option value="4">4 sao</option>
+        <option value="3">3 sao</option>
+        <option value="2">2 sao</option>
+        <option value="1">1 sao</option>
+      </select>
+    </div>
+    <button class="btn-reset" id="btnReset">Xóa lọc</button>
+  </div>
+
+  <!-- RESULTS INFO -->
+  <div class="results-info">
+    <span id="resultsInfo">Đang tải...</span>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table class="bookings-table" id="reviewsTable">
+      <thead>
+        <tr>
+          <th data-adm-i18n="rv.th_hotel">Khách sạn</th>
+          <th data-adm-i18n="rv.th_guest">Khách hàng</th>
+          <th data-adm-i18n="rv.th_rating">Điểm</th>
+          <th data-adm-i18n="rv.th_title">Tiêu đề</th>
+          <th data-adm-i18n="rv.th_comment">Nội dung</th>
+          <th data-adm-i18n="rv.th_date">Ngày</th>
+          <th data-adm-i18n="rv.th_status">Trạng thái</th>
+          <th data-adm-i18n="rv.th_action">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="8" class="loading-row">Đang tải dữ liệu...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="pagination" id="pagination"></div>
+
+  <!-- MODAL: TRẢ LỜI REVIEW -->
+  <div class="modal-overlay hidden" id="replyModal">
+    <div class="modal" style="max-width:600px">
+      <div class="modal-header">
+        <h2>Phản Hồi Review</h2>
+        <button class="modal-close" id="replyModalClose">✕</button>
+      </div>
+      <div class="modal-form">
+        <!-- Chi tiết review -->
+        <div class="review-detail-card" id="replyReviewDetail">
+          <!-- filled by JS -->
+        </div>
+        <!-- Textarea trả lời -->
+        <label class="reply-label">Phản hồi của khách sạn <span class="req">*</span></label>
+        <textarea
+          class="reply-textarea"
+          id="replyText"
+          placeholder="Kính gửi Quý khách, chúng tôi xin chân thành cảm ơn..."
+        ></textarea>
+        <div class="modal-actions" style="margin-top:1.2rem">
+          <button type="button" class="btn-cancel" id="replyCancel">Hủy</button>
+          <button type="button" class="btn-save" id="replySave">Lưu phản hồi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: XÁC NHẬN XÓA -->
+  <div class="modal-overlay hidden" id="deleteModal">
+    <div class="modal" style="max-width:400px">
+      <div class="modal-header">
+        <h2>Xác nhận xóa</h2>
+        <button class="modal-close" id="deleteModalClose">✕</button>
+      </div>
+      <div style="padding:2rem">
+        <p style="color:var(--muted);line-height:1.7">
+          Bạn có chắc muốn xóa review này không? Hành động này <strong style="color:var(--red)">không thể hoàn tác</strong>.
+        </p>
+        <div class="modal-actions" style="margin-top:1.5rem">
+          <button type="button" class="btn-cancel" id="deleteCancelBtn">Hủy</button>
+          <button type="button" id="deleteConfirmBtn" style="background:var(--red);color:var(--white);font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:0.8rem 2rem;border:none;cursor:pointer;transition:opacity 0.2s;">Xóa review</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="reviews.js"></script>
+  <script src="admin-auth.js"></script>
+</body>
+</html>

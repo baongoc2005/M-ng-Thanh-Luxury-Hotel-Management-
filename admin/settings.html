@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Cài Đặt — Mường Thanh</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="admin.css"/>
+  <script src="admin-i18n.js"></script>
+</head>
+<body>
+
+  <header class="adm-header">
+    <a href="../index.html" class="adm-logo">Mường Thanh</a>
+    <nav class="adm-nav">
+      <a href="dashboard.html" class="adm-nav-link">Dashboard</a>
+      <a href="index.html"     class="adm-nav-link">Đặt Phòng</a>
+      <a href="customers.html" class="adm-nav-link">Khách Hàng</a>
+      <a href="hotels.html"    class="adm-nav-link">Khách Sạn</a>
+      <a href="staff.html"     class="adm-nav-link">Nhân Viên</a>
+      <a href="reviews.html"   class="adm-nav-link">Reviews</a>
+      <a href="promotions.html" class="adm-nav-link">Khuyến Mãi</a>
+      <a href="payments.html"  class="adm-nav-link">Thanh Toán</a>
+      <a href="emails.html"    class="adm-nav-link">Email</a>
+      <a href="settings.html"  class="adm-nav-link active">Cài Đặt</a>
+    </nav>
+  </header>
+
+  <!-- PAGE TITLE -->
+  <div class="settings-page-header">
+    <h1 class="settings-page-title" data-adm-i18n="set.title">Cài Đặt Hệ Thống</h1>
+  </div>
+
+  <!-- SECTION: SETTINGS -->
+  <section class="settings-section">
+    <div class="settings-section-head">
+      <div>
+        <h2 class="settings-section-title" data-adm-i18n="set.section_general">Cấu Hình Chung</h2>
+        <p class="settings-section-sub" data-adm-i18n="set.section_general_sub">Phí dịch vụ, thông tin liên hệ, giới hạn bộ lọc</p>
+      </div>
+      <button class="btn-save" onclick="saveSettings()" data-adm-i18n="set.btn_save_settings">Lưu cài đặt</button>
+    </div>
+    <div class="settings-grid" id="settingsGrid">
+      <div class="settings-loading">Đang tải...</div>
+    </div>
+  </section>
+
+  <!-- SECTION: EXTRAS -->
+  <section class="settings-section">
+    <div class="settings-section-head">
+      <div>
+        <h2 class="settings-section-title" data-adm-i18n="set.section_extras">Dịch Vụ Bổ Sung</h2>
+        <p class="settings-section-sub" data-adm-i18n="set.section_extras_sub">Giá và trạng thái hiển thị trên trang đặt phòng</p>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="bookings-table" id="extrasTable">
+        <thead>
+          <tr>
+            <th data-adm-i18n="set.th_service">Dịch vụ</th>
+            <th data-adm-i18n="set.th_calc">Cách tính giá</th>
+            <th data-adm-i18n="set.th_price">Giá (đ)</th>
+            <th data-adm-i18n="set.th_status">Trạng thái</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="extrasTbody">
+          <tr><td colspan="5" class="loading-row">Đang tải...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TOAST -->
+  <div class="settings-toast hidden" id="toast"></div>
+
+  <script>
+  function getCalcLabels() {
+    return {
+      flat: 'Cố định',
+      per_person: '× ' + tAdm('bk.guests_label'),
+      per_night: '× ' + tAdm('bk.nights_label'),
+      per_person_per_night: '× Khách × ' + tAdm('bk.nights_label'),
+    };
+  }
+
+  // ===== SETTINGS =====
+  async function loadSettings() {
+    const res  = await fetch('../api/settings.php');
+    const data = await res.json();
+    const grid = document.getElementById('settingsGrid');
+    grid.innerHTML = (data.settings || []).map(s => `
+      <div class="setting-field">
+        <label class="setting-label">${s.label || s.key}</label>
+        <input class="setting-input"
+               type="${s.type === 'number' ? 'number' : 'text'}"
+               id="s_${s.key}"
+               value="${s.value}"
+               data-key="${s.key}"/>
+      </div>`).join('');
+  }
+
+  async function saveSettings() {
+    const inputs = document.querySelectorAll('.setting-input[data-key]');
+    const map = {};
+    inputs.forEach(i => map[i.dataset.key] = i.value);
+    await fetch('../api/settings.php', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({settings: map})
+    });
+    showToast(tAdm('common.saved'));
+  }
+
+  // ===== EXTRAS =====
+  async function loadExtras() {
+    const res  = await fetch('../api/extras.php?all=1');
+    const data = await res.json();
+    const tbody = document.getElementById('extrasTbody');
+    tbody.innerHTML = (data.extras || []).map(ex => `
+      <tr>
+        <td>
+          <span style="font-size:1.1rem;margin-right:0.4rem">${ex.icon}</span>
+          <strong>${ex.name_vi}</strong>
+          <div class="room-name">${ex.note}</div>
+        </td>
+        <td><span class="calc-type-badge">${getCalcLabels()[ex.calc_type] || ex.calc_type}</span></td>
+        <td>
+          <input class="extra-price-input" type="number"
+                 value="${ex.price}" id="ep_${ex.id}" min="0" step="1000"/>
+        </td>
+        <td>
+          <button class="extra-toggle ${ex.is_active ? 'active' : ''}"
+                  id="et_${ex.id}"
+                  onclick="toggleExtra(${ex.id}, ${ex.is_active})">
+            ${ex.is_active ? '● Bật' : '○ Tắt'}
+          </button>
+        </td>
+        <td>
+          <button class="btn-save btn-save-sm" onclick="saveExtra(${ex.id})">${tAdm('set.btn_save_extra')}</button>
+        </td>
+      </tr>`).join('');
+  }
+
+  async function saveExtra(id) {
+    const price = parseInt(document.getElementById('ep_' + id).value) || 0;
+    await fetch('../api/extras.php?id=' + id, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({price})
+    });
+    showToast(tAdm('common.saved'));
+  }
+
+  async function toggleExtra(id, current) {
+    const newVal = current ? 0 : 1;
+    await fetch('../api/extras.php?id=' + id, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({is_active: newVal})
+    });
+    loadExtras();
+  }
+
+  // ===== TOAST =====
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.remove('hidden');
+    setTimeout(() => t.classList.add('hidden'), 2500);
+  }
+
+  loadSettings();
+  loadExtras();
+  </script>
+  <script src="admin-auth.js"></script>
+</body>
+</html>
