@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OTA Simulator — Demo Tích Hợp Kênh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --black:#080808;--dark:#0f0f0f;--card:#161616;
+      --border:rgba(255,255,255,0.08);--gold:#c9a96e;--gold-l:#e8c98a;
+      --white:#f5f0ea;--muted:rgba(245,240,234,0.5);
+      --green:#4caf7d;--red:#e05555;--blue:#5b9cf6;--orange:#f0924a;
+      --font-serif:'Cormorant Garamond',serif;--font-sans:'Inter',sans-serif;
+    }
+    body{background:var(--black);color:var(--white);font-family:var(--font-sans);min-height:100vh;padding:2rem;}
+    h1{font-family:var(--font-serif);font-size:clamp(1.8rem,4vw,3rem);font-weight:300;color:var(--gold);margin-bottom:0.4rem;}
+    .subtitle{font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:2.5rem;}
+    .note{background:rgba(201,169,110,0.08);border:1px solid rgba(201,169,110,0.3);padding:1rem 1.4rem;font-size:0.82rem;color:var(--muted);line-height:1.7;margin-bottom:2.5rem;}
+    .note strong{color:var(--gold);}
+
+    /* CHANNEL CARDS */
+    .channels{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;margin-bottom:3rem;}
+    .ch-card{background:var(--card);border:1px solid var(--border);padding:1.8rem;transition:border-color 0.3s,transform 0.3s;}
+    .ch-card:hover{border-color:var(--gold);transform:translateY(-3px);}
+    .ch-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;}
+    .ch-icon{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+    .ch-name{font-size:1rem;font-weight:500;}
+    .ch-desc{font-size:0.75rem;color:var(--muted);line-height:1.6;margin-bottom:1.4rem;}
+    .ch-fields{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.4rem;}
+    .ch-field{display:flex;justify-content:space-between;font-size:0.78rem;}
+    .ch-field-label{color:var(--muted);}
+    .ch-field-val{color:var(--white);font-weight:500;}
+    .btn-send{width:100%;padding:0.8rem;font-size:0.75rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;border:none;font-family:var(--font-sans);transition:all 0.3s;}
+    .btn-send:disabled{opacity:0.5;cursor:not-allowed;}
+    .btn-booking{background:#003580;color:#fff;}
+    .btn-booking:hover:not(:disabled){background:#00408f;}
+    .btn-traveloka{background:#ff6900;color:#fff;}
+    .btn-traveloka:hover:not(:disabled){background:#e85e00;}
+    .btn-agoda{background:#e8001d;color:#fff;}
+    .btn-agoda:hover:not(:disabled){background:#c5001a;}
+    .btn-hotline{background:var(--green);color:#000;}
+    .btn-hotline:hover:not(:disabled){background:#3da068;}
+    .btn-zalo{background:#0068ff;color:#fff;}
+    .btn-zalo:hover:not(:disabled){background:#0055d4;}
+    .btn-facebook{background:#1877f2;color:#fff;}
+    .btn-facebook:hover:not(:disabled){background:#1464cc;}
+
+    /* STATUS */
+    .result-area{margin-top:2rem;}
+    .result-area h2{font-family:var(--font-serif);font-size:1.4rem;font-weight:300;color:var(--white);margin-bottom:1rem;}
+    #log{background:var(--dark);border:1px solid var(--border);padding:1.2rem;font-size:0.78rem;line-height:2;min-height:80px;font-family:'Courier New',monospace;}
+    .log-ok{color:var(--green);}
+    .log-err{color:var(--red);}
+    .log-info{color:var(--gold);}
+    .log-muted{color:var(--muted);}
+
+    .admin-link{
+      display:inline-block;margin-top:1.5rem;
+      background:var(--gold);color:var(--black);
+      font-size:0.75rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;
+      padding:0.8rem 2rem;text-decoration:none;transition:background 0.3s;
+    }
+    .admin-link:hover{background:var(--gold-l);}
+
+    @media(max-width:600px){.channels{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+
+<h1>OTA Channel Simulator</h1>
+<p class="subtitle">Công cụ giả lập đơn đặt phòng từ các kênh OTA — Demo tích hợp đa kênh</p>
+
+<div class="note">
+  <strong>Mục đích:</strong> Trang này mô phỏng luồng dữ liệu thực tế khi một khách đặt phòng trên <strong>Booking.com, Traveloka, Agoda</strong> hoặc liên hệ qua <strong>Hotline / Zalo / Facebook</strong>.
+  Mỗi kênh gửi một yêu cầu POST đến <code>api/webhook.php</code> — hệ thống tự nhận, xử lý và lưu vào database mà không cần nhập tay.
+  Kiểm tra kết quả tại <a href="admin/" style="color:var(--gold)">Admin Dashboard →</a>
+</div>
+
+<div class="channels" id="channelCards"></div>
+
+<div class="result-area">
+  <h2>Nhật ký giao dịch</h2>
+  <div id="log"><span class="log-muted">Chưa có giao dịch nào. Bấm "Gửi đơn" từ một kênh bên trên...</span></div>
+  <a href="admin/" class="admin-link" target="_blank">Mở Admin Dashboard →</a>
+</div>
+
+<script>
+const WEBHOOK = 'api/webhook.php';
+let HOTELS_DATA = [];
+fetch('api/hotels.php').then(r => r.json()).then(d => { HOTELS_DATA = d.hotels || []; }).catch(() => {});
+
+// ===== DANH SÁCH KÊNH =====
+const CHANNELS = [
+  {
+    id: 'booking_com', name: 'Booking.com', icon: '🔵',
+    iconBg: '#003580', btnClass: 'btn-booking',
+    desc: 'Khách tìm phòng trên Booking.com, chọn ngày và xác nhận. Booking.com gửi thông báo đến channel manager (Beds24), Beds24 forward đến webhook.',
+    payload: () => ({
+      source: 'booking_com',
+      bookid:          'BDC-' + Math.floor(Math.random()*900000+100000),
+      referer:         'booking.com',
+      propname:        randomHotel().name,
+      hotel_slug:      randomHotel().slug,
+      roomname:        randomRoom().type,
+      arrival:         dateStr(2),
+      departure:       dateStr(4),
+      nights:          2,
+      numadult:        2, numchild: 0,
+      guestname:       randomLastName(),
+      guestfirstname:  randomFirstName(),
+      guestemail:      'guest' + Math.floor(Math.random()*9999) + '@gmail.com',
+      guestphone:      '09' + Math.floor(Math.random()*89999999+10000000),
+      guestcountry:    'VN',
+      price:           randomRoom().price * 2,
+      price_per_night: randomRoom().price,
+      remarks:         'Đặt qua Booking.com',
+    })
+  },
+  {
+    id: 'traveloka', name: 'Traveloka', icon: '🟠',
+    iconBg: '#ff6900', btnClass: 'btn-traveloka',
+    desc: 'Khách đặt qua ứng dụng Traveloka. Hệ thống nhận thông báo qua Traveloka Extranet API → channel manager → webhook.',
+    payload: () => {
+      const h = randomHotel(), r = randomRoom(h);
+      return {
+        source: 'traveloka', referer: 'traveloka',
+        bookid:          'TVL-' + Math.floor(Math.random()*900000+100000),
+        hotel_slug: h.slug, propname: h.name, roomname: r.type,
+        arrival: dateStr(3), departure: dateStr(5), nights: 2,
+        numadult: 2, numchild: 1,
+        guestname:       randomLastName(),
+        guestfirstname:  randomFirstName(),
+        guestemail:      'customer' + Math.floor(Math.random()*9999) + '@gmail.com',
+        guestphone:      '09' + Math.floor(Math.random()*89999999+10000000),
+        guestcountry:    'VN',
+        price: r.price * 2, price_per_night: r.price,
+        remarks: 'Đặt qua Traveloka App',
+      };
+    }
+  },
+  {
+    id: 'agoda', name: 'Agoda', icon: '🔴',
+    iconBg: '#e8001d', btnClass: 'btn-agoda',
+    desc: 'Khách đặt qua Agoda.com. Tích hợp qua Agoda YCS API → channel manager → webhook.',
+    payload: () => {
+      const h = randomHotel(), r = randomRoom(h);
+      return {
+        source: 'agoda', referer: 'agoda',
+        bookid:          'AGD-' + Math.floor(Math.random()*900000+100000),
+        hotel_slug: h.slug, propname: h.name, roomname: r.type,
+        arrival: dateStr(1), departure: dateStr(3), nights: 2,
+        numadult: 1, numchild: 0,
+        guestname:       randomLastName(),
+        guestfirstname:  randomFirstName(),
+        guestemail:      'agoda' + Math.floor(Math.random()*9999) + '@gmail.com',
+        guestphone:      '09' + Math.floor(Math.random()*89999999+10000000),
+        guestcountry:    'KR',
+        price: r.price * 2, price_per_night: r.price,
+        remarks: 'Booked via Agoda',
+      };
+    }
+  },
+  {
+    id: 'hotline', name: 'Hotline 1900 1833', icon: '📞',
+    iconBg: '#2a6e3f', btnClass: 'btn-hotline',
+    desc: 'Khách gọi điện đến tổng đài. Nhân viên nhận thông tin và nhập vào hệ thống qua giao diện Admin hoặc API.',
+    payload: () => {
+      const h = randomHotel(), r = randomRoom(h);
+      return {
+        source: 'hotline',
+        hotel_slug: h.slug, hotel_name: h.name, room_type: r.type,
+        check_in: dateStr(5), check_out: dateStr(7), nights: 2, guests: 2,
+        last_name:  randomLastName(), first_name: randomFirstName(),
+        email: '', phone: '09' + Math.floor(Math.random()*89999999+10000000),
+        payment_method: 'cash',
+        price_per_night: r.price, grand_total: r.price * 2,
+        status: 'confirmed',
+        notes: 'Nhận qua hotline — nhân viên: Nguyễn Thị Mai',
+      };
+    },
+    useBookingsApi: true
+  },
+  {
+    id: 'zalo', name: 'Zalo OA', icon: '💬',
+    iconBg: '#0055d4', btnClass: 'btn-zalo',
+    desc: 'Khách nhắn tin qua Zalo Official Account. Bot Zalo phân tích tin nhắn và gửi thông tin đặt phòng đến webhook.',
+    payload: () => {
+      const h = randomHotel(), r = randomRoom(h);
+      return {
+        source: 'zalo',
+        hotel_slug: h.slug, hotel_name: h.name, room_type: r.type,
+        check_in: dateStr(3), check_out: dateStr(5), nights: 2, guests: 2,
+        last_name:  randomLastName(), first_name: randomFirstName(),
+        phone: '09' + Math.floor(Math.random()*89999999+10000000), email: '',
+        payment_method: 'transfer',
+        price_per_night: r.price, grand_total: r.price * 2,
+        status: 'pending',
+        notes: 'Đặt qua Zalo OA',
+      };
+    },
+    useBookingsApi: true
+  },
+  {
+    id: 'facebook', name: 'Facebook Messenger', icon: '📘',
+    iconBg: '#1464cc', btnClass: 'btn-facebook',
+    desc: 'Khách nhắn tin qua Facebook Page. Chatbot (Manychat) thu thập thông tin và gọi API để tạo đơn.',
+    payload: () => {
+      const h = randomHotel(), r = randomRoom(h);
+      return {
+        source: 'facebook',
+        hotel_slug: h.slug, hotel_name: h.name, room_type: r.type,
+        check_in: dateStr(7), check_out: dateStr(9), nights: 2, guests: 2,
+        last_name:  randomLastName(), first_name: randomFirstName(),
+        phone: '09' + Math.floor(Math.random()*89999999+10000000), email: '',
+        payment_method: 'cash',
+        price_per_night: r.price, grand_total: r.price * 2,
+        status: 'pending',
+        notes: 'Đặt qua Facebook Messenger',
+      };
+    },
+    useBookingsApi: true
+  },
+];
+
+// ===== RENDER CARDS =====
+function renderCards() {
+  const container = document.getElementById('channelCards');
+  container.innerHTML = CHANNELS.map(ch => `
+    <div class="ch-card">
+      <div class="ch-header">
+        <div class="ch-icon" style="background:${ch.iconBg}20;border:1px solid ${ch.iconBg}40">${ch.icon}</div>
+        <span class="ch-name">${ch.name}</span>
+      </div>
+      <p class="ch-desc">${ch.desc}</p>
+      <div class="ch-fields" id="fields-${ch.id}">
+        <div class="ch-field"><span class="ch-field-label">Trạng thái</span><span class="ch-field-val log-muted">Chưa gửi</span></div>
+      </div>
+      <button class="btn-send ${ch.btnClass}" onclick="sendBooking('${ch.id}')">
+        📤 Gửi đơn từ ${ch.name}
+      </button>
+    </div>
+  `).join('');
+}
+
+// ===== SEND BOOKING =====
+async function sendBooking(channelId) {
+  const ch  = CHANNELS.find(c => c.id === channelId);
+  const btn = document.querySelector(`button[onclick="sendBooking('${channelId}')"]`);
+  const payload = ch.payload();
+  const endpoint = ch.useBookingsApi ? 'api/bookings.php' : WEBHOOK;
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Đang gửi...';
+
+  addLog('info', `[${ch.name}] Gửi đơn đến ${endpoint}...`);
+  addLog('muted', `Payload: ${JSON.stringify(payload).substring(0, 120)}...`);
+
+  try {
+    const res  = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+
+    if (data.success || data.ref_code) {
+      addLog('ok', `✅ [${ch.name}] Đơn đã lưu thành công! Mã: ${data.ref_code}`);
+      updateCardFields(channelId, payload, data.ref_code);
+    } else {
+      addLog('err', `❌ [${ch.name}] Lỗi: ${JSON.stringify(data)}`);
+    }
+  } catch (e) {
+    addLog('err', `❌ [${ch.name}] Không kết nối được API (${e.message}). Kiểm tra XAMPP + database.`);
+  }
+
+  btn.disabled = false;
+  btn.textContent = `📤 Gửi đơn từ ${ch.name}`;
+}
+
+// ===== UPDATE CARD =====
+function updateCardFields(channelId, payload, ref) {
+  const el = document.getElementById(`fields-${channelId}`);
+  const guestName = (payload.guestname || payload.last_name || '') + ' ' + (payload.guestfirstname || payload.first_name || '');
+  const hotel     = payload.propname || payload.hotel_name || '';
+  const room      = payload.roomname || payload.room_type  || '';
+  const checkIn   = payload.arrival  || payload.check_in   || '';
+  const checkOut  = payload.departure|| payload.check_out  || '';
+  const total     = (payload.price   || payload.grand_total|| 0).toLocaleString('vi-VN') + ' đ';
+
+  el.innerHTML = `
+    <div class="ch-field"><span class="ch-field-label">Mã đặt phòng</span><span class="ch-field-val" style="color:var(--gold)">${ref}</span></div>
+    <div class="ch-field"><span class="ch-field-label">Khách</span><span class="ch-field-val">${guestName.trim()}</span></div>
+    <div class="ch-field"><span class="ch-field-label">Khách sạn</span><span class="ch-field-val" style="font-size:0.7rem">${hotel}</span></div>
+    <div class="ch-field"><span class="ch-field-label">Phòng</span><span class="ch-field-val" style="font-size:0.7rem">${room}</span></div>
+    <div class="ch-field"><span class="ch-field-label">Check-in</span><span class="ch-field-val">${checkIn}</span></div>
+    <div class="ch-field"><span class="ch-field-label">Tổng tiền</span><span class="ch-field-val" style="color:var(--gold)">${total}</span></div>
+    <div class="ch-field"><span class="ch-field-label">Trạng thái</span><span class="ch-field-val" style="color:var(--green)">✅ Đã lưu vào hệ thống</span></div>
+  `;
+}
+
+// ===== LOG =====
+function addLog(type, msg) {
+  const log  = document.getElementById('log');
+  const time = new Date().toLocaleTimeString('vi-VN');
+  if (log.querySelector('.log-muted')?.textContent.includes('Chưa có')) log.innerHTML = '';
+  log.innerHTML += `<div class="log-${type}">[${time}] ${msg}</div>`;
+  log.scrollTop = log.scrollHeight;
+}
+
+// ===== DATA HELPERS =====
+function randomHotel() {
+  if (!HOTELS_DATA.length) return { name: 'Mường Thanh', slug: 'luxury-ha-long', rooms: [{type:'Deluxe Room', price:1500000}] };
+  return HOTELS_DATA[Math.floor(Math.random() * HOTELS_DATA.length)];
+}
+function randomRoom(hotel) {
+  const h = hotel || randomHotel();
+  return h.rooms[Math.floor(Math.random() * h.rooms.length)];
+}
+function dateStr(offsetDays) {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  return d.toISOString().split('T')[0];
+}
+const LAST_NAMES  = ['Nguyễn','Trần','Lê','Phạm','Hoàng','Vũ','Đặng','Bùi','Đỗ','Hồ'];
+const FIRST_NAMES = ['Văn An','Thị Lan','Minh Tuấn','Thu Hương','Quốc Bảo','Thị Mai','Hữu Đức','Ngọc Linh'];
+function randomLastName()  { return LAST_NAMES[Math.floor(Math.random()  * LAST_NAMES.length)]; }
+function randomFirstName() { return FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)]; }
+
+// ===== START =====
+renderCards();
+</script>
+</body>
+</html>
