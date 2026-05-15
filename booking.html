@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Đặt Phòng — Mường Thanh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="booking.css"/>
+  <script src="i18n.js"></script>
+</head>
+<body class="booking-page">
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <nav class="nav scrolled">
+    <a href="index.html" class="nav-logo">Mường Thanh</a>
+    <div class="nav-links">
+      <a href="#" class="nav-link" id="backToHotel" data-i18n="nav.back_hotel">← Quay lại khách sạn</a>
+    </div>
+    <div class="lang-switcher">
+      <button class="lang-btn" data-lang="vi" onclick="setLang('vi')">VI</button>
+      <span class="lang-sep">|</span>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+    </div>
+  </nav>
+
+  <!-- SUCCESS OVERLAY (non-bank methods) -->
+  <div class="success-overlay hidden" id="successOverlay">
+    <div class="success-box">
+      <div class="success-icon">✓</div>
+      <h2>Đặt Phòng Thành Công!</h2>
+      <p>Cảm ơn bạn đã chọn Mường Thanh. Chúng tôi sẽ gửi xác nhận đến email của bạn trong vài phút.</p>
+      <div class="success-ref" id="successRef"></div>
+      <div class="success-actions">
+        <a href="index.html" class="btn-primary">Về Trang Chủ</a>
+        <a href="search.html" class="btn-ghost">Khám phá thêm</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- BANK TRANSFER PAYMENT SCREEN -->
+  <div class="success-overlay hidden" id="bankOverlay">
+    <div class="bank-box">
+
+      <!-- Trạng thái chờ -->
+      <div id="bankWaiting">
+        <div class="bank-header">
+          <div class="bank-step-label">Bước cuối cùng</div>
+          <h2 class="bank-title">Hoàn tất thanh toán</h2>
+          <p class="bank-sub">Chuyển khoản đúng nội dung để hệ thống tự xác nhận đơn của bạn.</p>
+        </div>
+
+        <div class="bank-body">
+          <!-- QR -->
+          <div class="bank-qr-wrap">
+            <img id="bankQrImg" src="" alt="QR chuyển khoản" class="bank-qr"/>
+            <p class="bank-qr-note">Quét QR bằng app ngân hàng bất kỳ</p>
+          </div>
+
+          <!-- Thông tin chuyển khoản -->
+          <div class="bank-info">
+            <div class="bi-row">
+              <span class="bi-label">Ngân hàng</span>
+              <span class="bi-val" id="biBankName">—</span>
+            </div>
+            <div class="bi-row">
+              <span class="bi-label">Số tài khoản</span>
+              <span class="bi-val">
+                <span id="biAccountNum">—</span>
+                <button class="bi-copy" onclick="copyText('biAccountNum')" title="Sao chép">⎘</button>
+              </span>
+            </div>
+            <div class="bi-row">
+              <span class="bi-label">Chủ tài khoản</span>
+              <span class="bi-val" id="biAccountName">—</span>
+            </div>
+            <div class="bi-row bi-row-amount">
+              <span class="bi-label">Số tiền</span>
+              <span class="bi-val bi-amount" id="biAmount">—</span>
+            </div>
+            <div class="bi-row bi-row-content">
+              <span class="bi-label">Nội dung CK</span>
+              <span class="bi-val">
+                <strong id="biContent" class="bi-content-val">—</strong>
+                <button class="bi-copy" onclick="copyText('biContent')" title="Sao chép">⎘</button>
+              </span>
+            </div>
+            <div class="bi-notice">
+              Vui lòng chuyển khoản đúng <strong>số tiền</strong> và <strong>nội dung</strong> để hệ thống tự động xác nhận.
+            </div>
+          </div>
+        </div>
+
+        <!-- Trạng thái polling -->
+        <div class="bank-polling">
+          <div class="polling-dot"></div>
+          <span id="pollingText">Đang chờ xác nhận thanh toán...</span>
+        </div>
+
+        <div class="bank-footer-note">
+          Đơn của bạn đã được ghi nhận. Sau khi chuyển khoản thành công, trang sẽ tự động cập nhật.<br/>
+          Mã đặt phòng: <span id="bankRef" class="bank-ref-code">—</span>
+        </div>
+      </div>
+
+      <!-- Đã thanh toán thành công -->
+      <div id="bankConfirmed" class="hidden">
+        <div class="success-icon">✓</div>
+        <h2>Thanh Toán Xác Nhận!</h2>
+        <p>Chúng tôi đã nhận được thanh toán của bạn. Xác nhận đặt phòng sẽ được gửi đến email trong vài phút.</p>
+        <div class="success-ref" id="bankConfirmedRef"></div>
+        <div class="success-actions">
+          <a href="index.html" class="btn-primary">Về Trang Chủ</a>
+          <a href="search.html" class="btn-ghost">Khám phá thêm</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="booking-layout" id="bookingLayout">
+
+    <!-- LEFT: FORM -->
+    <div class="booking-form-wrap">
+      <div class="booking-steps">
+        <div class="step active" data-step="1"><span>1</span> Thông tin</div>
+        <div class="step-line"></div>
+        <div class="step" data-step="2"><span>2</span> Thanh toán</div>
+        <div class="step-line"></div>
+        <div class="step" data-step="3"><span>3</span> Xác nhận</div>
+      </div>
+
+      <!-- STEP 1: GUEST INFO -->
+      <div class="form-step active" id="step1">
+        <h2 class="form-step-title">Thông Tin Khách</h2>
+        <div class="form-grid">
+          <div class="field">
+            <label>Họ <span class="req">*</span></label>
+            <input type="text" id="lastName" placeholder="Nguyễn" required/>
+          </div>
+          <div class="field">
+            <label>Tên <span class="req">*</span></label>
+            <input type="text" id="firstName" placeholder="Văn An" required/>
+          </div>
+          <div class="field full">
+            <label>Email <span class="req">*</span></label>
+            <input type="email" id="email" placeholder="email@example.com" required/>
+          </div>
+          <div class="field">
+            <label>Số điện thoại <span class="req">*</span></label>
+            <input type="tel" id="phone" placeholder="0901 234 567" required/>
+          </div>
+          <div class="field">
+            <label>Quốc tịch</label>
+            <select id="nationality">
+              <option value="VN" selected>🇻🇳 Việt Nam</option>
+              <option value="US">🇺🇸 Hoa Kỳ</option>
+              <option value="GB">🇬🇧 Anh</option>
+              <option value="FR">🇫🇷 Pháp</option>
+              <option value="DE">🇩🇪 Đức</option>
+              <option value="JP">🇯🇵 Nhật Bản</option>
+              <option value="KR">🇰🇷 Hàn Quốc</option>
+              <option value="CN">🇨🇳 Trung Quốc</option>
+              <option value="AU">🇦🇺 Úc</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label>Yêu cầu đặc biệt</label>
+            <textarea id="specialReq" rows="3" placeholder="Phòng tầng cao, gần thang máy, cần nôi em bé..."></textarea>
+          </div>
+        </div>
+        <div class="form-extras">
+          <h3 class="extras-title">Dịch Vụ Bổ Sung</h3>
+          <div class="extras-grid" id="extrasGrid">
+            <p style="color:var(--muted);font-size:0.85rem;padding:0.5rem 0">Đang tải dịch vụ...</p>
+          </div>
+        </div>
+        <button class="btn-next" id="nextToStep2">Tiếp tục →</button>
+      </div>
+
+      <!-- STEP 2: PAYMENT -->
+      <div class="form-step hidden" id="step2">
+        <h2 class="form-step-title">Phương Thức Thanh Toán</h2>
+        <div class="payment-methods" id="pmContainer">
+          <p style="color:var(--muted);font-size:0.85rem;padding:1rem 0">Đang tải phương thức thanh toán...</p>
+        </div>
+
+        <!-- Card form -->
+        <div class="card-form" id="cardForm">
+          <div class="form-grid">
+            <div class="field full">
+              <label>Số thẻ <span class="req">*</span></label>
+              <input type="text" id="cardNum" placeholder="1234 5678 9012 3456" maxlength="19"/>
+            </div>
+            <div class="field full">
+              <label>Tên trên thẻ <span class="req">*</span></label>
+              <input type="text" id="cardName" placeholder="NGUYEN VAN AN"/>
+            </div>
+            <div class="field">
+              <label>Ngày hết hạn <span class="req">*</span></label>
+              <input type="text" id="cardExp" placeholder="MM/YY" maxlength="5"/>
+            </div>
+            <div class="field">
+              <label>CVV <span class="req">*</span></label>
+              <input type="text" id="cardCvv" placeholder="123" maxlength="3"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- VOUCHERS -->
+        <div class="voucher-section" id="voucherSection">
+          <div class="voucher-header">
+            <span class="voucher-title">Voucher của bạn</span>
+            <span class="voucher-count" id="voucherCount"></span>
+          </div>
+
+          <!-- Voucher cards -->
+          <div class="voucher-list" id="voucherList">
+            <div class="vc-loading">Đang tải voucher...</div>
+          </div>
+
+          <!-- Manual input fallback -->
+          <div class="voucher-manual">
+            <span class="voucher-manual-label">Hoặc nhập mã khác</span>
+            <div class="promo-row">
+              <input type="text" id="promoInput" placeholder="Nhập mã khuyến mãi..." maxlength="30" autocomplete="off"/>
+              <button type="button" id="promoApplyBtn">Áp dụng</button>
+            </div>
+          </div>
+          <div class="promo-feedback hidden" id="promoFeedback"></div>
+        </div>
+
+        <div class="policy-note">
+          <p>🔒 Thông tin thanh toán được mã hóa SSL 256-bit. Dữ liệu thẻ không được lưu trữ.</p>
+          <label class="policy-check">
+            <input type="checkbox" id="agreePolicy" required/>
+            <span>Tôi đồng ý với <a href="#">Chính sách hủy phòng</a> và <a href="#">Điều khoản dịch vụ</a></span>
+          </label>
+        </div>
+        <div class="btn-row">
+          <button class="btn-back" onclick="goStep(1)">← Quay lại</button>
+          <button class="btn-next" id="nextToStep3">Xác nhận đặt phòng →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: REVIEW -->
+      <div class="form-step hidden" id="step3">
+        <h2 class="form-step-title">Xác Nhận Đặt Phòng</h2>
+        <div class="review-box" id="reviewBox"></div>
+        <div class="btn-row">
+          <button class="btn-back" onclick="goStep(2)">← Quay lại</button>
+          <button class="btn-confirm" id="confirmBtn">
+            <span id="confirmBtnText">Xác Nhận & Đặt Phòng</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: SUMMARY -->
+    <div class="booking-summary">
+      <div class="summary-card">
+        <img class="summary-img" id="summaryImg" src="" alt=""/>
+        <div class="summary-body">
+          <span class="summary-brand" id="summaryBrand"></span>
+          <h3 class="summary-name" id="summaryName"></h3>
+          <p class="summary-room" id="summaryRoom"></p>
+          <div class="summary-dates">
+            <div class="sd-row">
+              <span class="sd-label">Nhận phòng</span>
+              <span class="sd-val" id="sCheckIn"></span>
+            </div>
+            <div class="sd-row">
+              <span class="sd-label">Trả phòng</span>
+              <span class="sd-val" id="sCheckOut"></span>
+            </div>
+            <div class="sd-row">
+              <span class="sd-label">Số khách</span>
+              <span class="sd-val" id="sGuests"></span>
+            </div>
+            <div class="sd-row">
+              <span class="sd-label">Số đêm</span>
+              <span class="sd-val" id="sNights"></span>
+            </div>
+          </div>
+          <div class="summary-price-breakdown" id="priceBreakdown"></div>
+          <div class="summary-total">
+            <span>Tổng cộng</span>
+            <span class="total-amount" id="totalAmount"></span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="booking.js"></script>
+  <script src="cursor.js"></script>
+</body>
+</html>
